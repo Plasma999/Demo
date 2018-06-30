@@ -1,0 +1,201 @@
+﻿<style type="text/css">
+    td, th {
+        padding: 3px;
+    }
+</style>
+<script type="text/javascript">
+    function uuidv4() {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+            var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        });
+    }
+
+    function testGetAll() {
+        get('');
+    }
+
+    function testGet() {
+        var id = $('#input_getId').val();
+        get(id);
+    }
+
+    function get(id) {
+        $('#loading').show();
+        $('#span_table').html('<table id="table1" style="font-size:12px;"></table>');  //初始化table1
+
+        var api = "../api/StudentProfiles";
+        if (id != '') {
+            api += '/' + id;
+        }
+
+        $.getJSON(api, function (result) {
+            $('#span_msg').text(result.msg);
+            
+            $('#table1').html('<thead><tr><th>Id</th><th>Name</th><th>Address</th><th>Email</th><th>Tel</th><th>Message</th><th>Memo</th><th></th></tr></thead><tbody>');
+            $.each(result.ds, function (i, item) {
+                var $tr = $('<tr>').append(
+                    $('<td>').html('<span>' + item.Id + '</span>'),
+                    $('<td>').text(item.Name),
+                    $('<td>').text(item.Address),
+                    $('<td>').text(item.Email),
+                    $('<td>').text(item.Tel),
+                    $('<td>').text(item.Message),
+                    $('<td>').text(item.Memo),
+                    $('<td>').html('<input type="button" class="normal" value="修改" onclick="toUpdate();" /> <input type="button" style="display:none" class="toUpdate" value="確定修改" onclick="testPut();" /> <input type="button" style="display:none" class="toUpdate" value="取消" onclick="cancelUpdate();" /> <input type="button" class="normal" value="刪除" onclick="testDelete(\'' + item.guid + '\');" />')
+                ).appendTo('#table1');
+            });
+            $('#table1').DataTable({
+                "columnDefs": [
+                    { "orderable": false, "targets": 7 }  //第七個欄位取消排序
+                ]
+            });
+            $('#loading').hide();
+        });
+    }
+
+    function testPost() {
+        var StudentProfile = new Object();
+        StudentProfile.guid = uuidv4();
+        StudentProfile.Id = $('#add_id').val();
+        StudentProfile.Name = $('#add_Name').val();
+        StudentProfile.Address = $('#add_Address').val();
+        StudentProfile.Email = $('#add_Email').val();
+        StudentProfile.Tel = $('#add_Tel').val();
+        StudentProfile.Message = $('#add_Message').val();
+        StudentProfile.Memo = $('#add_Memo').val();
+
+        $.ajax({
+            url: '../api/StudentProfiles/',
+            type: 'POST',
+            dataType: 'json',
+            data: StudentProfile,
+            success: function (data, textStatus, xhr) {
+                alert('新增成功');
+                testGetAll();
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.log('Error in Operation');
+            }
+        });
+    }
+
+    function toUpdate() {
+        $(event.target).parent().find('.normal').hide();
+        $(event.target).parent().find('.toUpdate').show();
+
+        var text = $(event.target).parent().parent().find('span').text();
+        alert('功能還沒做好');
+        //$(event.target).parent().parent().find('span').hide();
+    }
+
+    function cancelUpdate() {
+        $(event.target).parent().find('.normal').show();
+        $(event.target).parent().find('.toUpdate').hide();
+
+        alert('功能還沒做好');
+    }
+
+    function testPut() {
+
+    }
+
+    function testDelete(guid) {
+        $.ajax({
+            url: '../api/StudentProfiles?guid=' + guid,
+            type: 'DELETE',
+            dataType: 'json',
+            success: function (data, textStatus, xhr) {
+                alert('刪除成功');
+                testGetAll();
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.log('Error in Operation');
+            }
+        });
+    }
+
+    function testDeleteAll() {
+        $.ajax({
+            url: '../api/StudentProfiles?all=yes',
+            type: 'DELETE',
+            dataType: 'json',
+            success: function (data, textStatus, xhr) {
+                alert('刪除成功');
+                testGetAll();
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.log('Error in Operation');
+            }
+        });
+    }
+</script>
+<section class="sections">
+    <div class="container txtWidth">
+        <div class="coloricon">
+            <div class="heading wow fadeIn animated" data-wow-offset="120" data-wow-duration="1.5s" style="visibility: visible; animation-duration: 1.5s; animation-name: fadeIn;">
+                <div class="title text-center title-theme">
+                    <h1>Student Profile</h1>
+                </div>
+                <div class="separator"></div>
+            </div>
+            <div class="wow fadeInLeft" data-wow-offset="120" data-wow-duration="1.5s" style="visibility: visible; animation-duration: 1.5s; animation-name: fadeInLeft;">
+                <div class="tab-content">
+                    <p>
+                        <span id="span_msg"></span>
+                    </p>
+                    <span id="span_table"></span>
+                    <p>
+                        Search All
+                        <input type="button" class="btn btn-defaultc2 btn-lg2" value="GO" onclick="testGetAll();" />
+                    </p>
+                    <p>
+                        Search ID
+                        <input type="text" id="input_getId" />
+                        <input type="button" class="btn btn-defaultc2 btn-lg2" value="GO" onclick="testGet();" />
+                    </p>
+                    <p>
+                        Insert a new student data
+                    </p>
+                    <p>
+                        <table>
+                            <tr>
+                                <td>Id</td>
+                                <td><input type="text" id="add_id" /></td>
+                            </tr>
+                            <tr>
+                                <td>Name</td>
+                                <td><input type="text" id="add_Name" /></td>
+                            </tr>
+                            <tr>
+                                <td>Address</td>
+                                <td><input type="text" id="add_Address" /></td>
+                            </tr>
+                            <tr>
+                                <td>Email</td>
+                                <td><input type="text" id="add_Email" /></td>
+                            </tr>
+                            <tr>
+                                <td>Tel</td>
+                                <td><input type="text" id="add_Tel" /></td>
+                            </tr>
+                            <tr>
+                                <td>Message</td>
+                                <td><input type="text" id="add_Message" /></td>
+                            </tr>
+                            <tr>
+                                <td>Memo</td>
+                                <td><input type="text" id="add_Memo" /></td>
+                            </tr>
+                        </table>
+                        <input type="button" class="btn btn-defaultc2 btn-lg2" value="insert" onclick="testPost();" />
+                    </p>
+                    <p>
+                        Delete All
+                        <input type="button" class="btn btn-defaultc2 btn-lg2" value="GO" onclick="testDeleteAll();" />
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,79 @@
+﻿
+<html>
+<head>
+    <style type="text/css">
+        p {
+            padding-top: 10px;
+        }
+    </style>
+    <script type="text/javascript">
+        function massInsert(type) {
+            var num = $('#testNum').val();
+            var limit1 = 500000;
+            if (num > limit1 && (type == 'EF_AddRange' || type == 'ADO_For')) {
+                alert('Data is more than ' + limit1 + '!\n' + type + ' is not good.\nChoose a better method please :)');
+                return;
+            }
+
+            var limit12 = 5000000;
+            if (num > limit12) {
+                if (!confirm('Data is more than ' + limit12 + '!\nIt will take a long time.\nAre you sure?')) {
+                    return;
+                }
+            }
+
+            $('#loading').show();
+            $.ajax({
+                url: '../api/StudentProfiles?num=' + num + '&type=' + type,
+                type: 'POST',
+                dataType: 'json',
+                success: function (data) {
+                    $.each(data, function (index, element) {
+                        var origin = $('#span_result').html();
+                        $('#span_result').html(origin + 'Data Number: ' + num + ', Method: ' + type + '<br/>' + element + '<br/>');
+                    });
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    alert(errorThrown);
+                },
+                complete: function () {
+                    $('#loading').hide();
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+    <section class="sections">
+        <div class="container txtWidth">
+            <div class="coloricon">
+                <div class="heading wow fadeIn animated" data-wow-offset="120" data-wow-duration="1.5s" style="visibility: visible; animation-duration: 1.5s; animation-name: fadeIn;">
+                    <div class="title text-center title-theme">
+                        <h1>Mass insert data to StudentProfile</h1>
+                    </div>
+                    <div class="separator"></div>
+                </div>
+                <div class="wow fadeInLeft" data-wow-offset="120" data-wow-duration="1.5s" style="visibility: visible; animation-duration: 1.5s; animation-name: fadeInLeft;">
+                    <div class="tab-content">
+                        <p>
+                            Test Data Number:
+                            <input type="text" id="testNum" size="8" value="50000" />
+                        </p>
+                        <p>Method 1: EntityFramework insert data</p>
+                        <input type="button" class="btn btn-defaultc2 btn-lg2" value="GO" onclick="massInsert('EF_AddRange');" />
+
+                        <p>Method 2: SqlBulkCopy insert data</p>
+                        <input type="button" class="btn btn-defaultc2 btn-lg2" value="GO" onclick="massInsert('SqlBulkCopy');" />
+
+                        <p>Method 3: TVP(Table Value Parameter) insert data</p>
+                        <input type="button" class="btn btn-defaultc2 btn-lg2" value="GO" onclick="massInsert('TVP');" />
+                        <p>
+                            <span id="span_result" style="color:blue;font-size:14px;" />
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>
