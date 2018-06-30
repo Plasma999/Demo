@@ -5,6 +5,15 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="StudentModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="ExceptionLog">
+          <Key>
+            <PropertyRef Name="Create_Time" />
+          </Key>
+          <Property Name="AP_ID" Type="varchar" MaxLength="30" />
+          <Property Name="Function_Name" Type="varchar" MaxLength="50" />
+          <Property Name="Create_Time" Type="datetime" Nullable="false" />
+          <Property Name="ErrorMsg" Type="nvarchar(max)" />
+        </EntityType>
         <EntityType Name="StudentProfile">
           <Key>
             <PropertyRef Name="guid" />
@@ -19,6 +28,7 @@
           <Property Name="Memo" Type="nvarchar" MaxLength="100" />
         </EntityType>
         <EntityContainer Name="StudentModelStoreContainer">
+          <EntitySet Name="ExceptionLog" EntityType="Self.ExceptionLog" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="StudentProfile" EntityType="Self.StudentProfile" Schema="dbo" store:Type="Tables" />
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -40,7 +50,17 @@
         </EntityType>
         <EntityContainer Name="StudentDB" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="StudentProfile" EntityType="Self.StudentProfile" />
+          <EntitySet Name="ExceptionLog" EntityType="StudentModel.ExceptionLog" />
         </EntityContainer>
+        <EntityType Name="ExceptionLog">
+          <Key>
+            <PropertyRef Name="Create_Time" />
+          </Key>
+          <Property Name="AP_ID" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="Function_Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Create_Time" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ErrorMsg" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -58,6 +78,16 @@
                 <ScalarProperty Name="Email" ColumnName="Email" />
                 <ScalarProperty Name="Tel" ColumnName="Tel" />
                 <ScalarProperty Name="Message" ColumnName="Message" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ExceptionLog">
+            <EntityTypeMapping TypeName="StudentModel.ExceptionLog">
+              <MappingFragment StoreEntitySet="ExceptionLog">
+                <ScalarProperty Name="ErrorMsg" ColumnName="ErrorMsg" />
+                <ScalarProperty Name="Create_Time" ColumnName="Create_Time" />
+                <ScalarProperty Name="Function_Name" ColumnName="Function_Name" />
+                <ScalarProperty Name="AP_ID" ColumnName="AP_ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

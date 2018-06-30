@@ -26,5 +26,6 @@ namespace APIDemo.Models
         }
     
         public virtual DbSet<StudentProfile> StudentProfile { get; set; }
+        public virtual DbSet<ExceptionLog> ExceptionLog { get; set; }
     }
 }

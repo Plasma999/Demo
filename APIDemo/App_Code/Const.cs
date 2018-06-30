@@ -2,7 +2,7 @@
 {
     internal class Const
     {
-        public const string AP_ID = "Eventlog";
+        public const string AP_ID = "APIDemo";
         public const string connID = "StudentDB_ConnStr";
     }
 }
