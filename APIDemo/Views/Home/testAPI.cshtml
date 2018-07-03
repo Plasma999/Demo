@@ -35,14 +35,14 @@
             $('#table1').html('<thead><tr><th>Id</th><th>Name</th><th>Address</th><th>Email</th><th>Tel</th><th>Message</th><th>Memo</th><th></th></tr></thead><tbody>');
             $.each(result.ds, function (i, item) {
                 var $tr = $('<tr>').append(
-                    $('<td>').html('<span>' + item.Id + '</span>'),
-                    $('<td>').text(item.Name),
-                    $('<td>').text(item.Address),
-                    $('<td>').text(item.Email),
-                    $('<td>').text(item.Tel),
-                    $('<td>').text(item.Message),
-                    $('<td>').text(item.Memo),
-                    $('<td>').html('<input type="button" class="normal" value="修改" onclick="toUpdate();" /> <input type="button" style="display:none" class="toUpdate" value="確定修改" onclick="testPut();" /> <input type="button" style="display:none" class="toUpdate" value="取消" onclick="cancelUpdate();" /> <input type="button" class="normal" value="刪除" onclick="testDelete(\'' + item.guid + '\');" />')
+                    $('<td>').html('<span class="col1">' + item.Id + '</span>'),
+                    $('<td>').html('<span class="col2">' + item.Name + '</span>'),
+                    $('<td>').html('<span class="col3">' + item.Address + '</span>'),
+                    $('<td>').html('<span class="col4">' + item.Email + '</span>'),
+                    $('<td>').html('<span class="col5">' + item.Tel + '</span>'),
+                    $('<td>').html('<span class="col6">' + item.Message + '</span>'),
+                    $('<td>').html('<span class="col7">' + item.Memo + '</span>'),
+                    $('<td>').html('<input type="button" class="normal" value="修改" onclick="toUpdate();" /> <input type="button" style="display:none" class="toUpdate" value="確定修改" onclick="testPut(\'' + item.guid + '\');" /> <input type="button" style="display:none" class="toUpdate" value="取消" onclick="cancelUpdate();" /> <input type="button" class="normal" value="刪除" onclick="testDelete(\'' + item.guid + '\');" />')
                 ).appendTo('#table1');
             });
             $('#table1').DataTable({
@@ -80,24 +80,63 @@
         });
     }
 
+    var colNum = 7;
+
     function toUpdate() {
         $(event.target).parent().find('.normal').hide();
         $(event.target).parent().find('.toUpdate').show();
 
-        var text = $(event.target).parent().parent().find('span').text();
-        alert('功能還沒做好');
-        //$(event.target).parent().parent().find('span').hide();
+        for (var i = 1; i <= colNum; i++) {
+            var oldSpan = $(event.target).parent().parent().find('.col' + i);
+            oldSpan.parent().append('<input type="text" class="col_new' + i + '" style="width:80px;" value="' + oldSpan.text() + '" />');
+            oldSpan.hide();
+        }
     }
 
     function cancelUpdate() {
         $(event.target).parent().find('.normal').show();
         $(event.target).parent().find('.toUpdate').hide();
 
-        alert('功能還沒做好');
+        for (var i = 1; i <= colNum; i++) {
+            $(event.target).parent().parent().find('.col' + i).show();
+            $(event.target).parent().parent().find('.col_new' + i).remove();
+        }
     }
 
-    function testPut() {
+    function testPut(guid) {
+        $(event.target).parent().find('.normal').show();
+        $(event.target).parent().find('.toUpdate').hide();
 
+        var obj_tr = $(event.target).parent().parent();
+
+        var StudentProfile = new Object();
+        StudentProfile.guid = guid;
+        StudentProfile.Id = obj_tr.find('.col_new1').val();
+        StudentProfile.Name = obj_tr.find('.col_new2').val();
+        StudentProfile.Address = obj_tr.find('.col_new3').val();
+        StudentProfile.Email = obj_tr.find('.col_new4').val();
+        StudentProfile.Tel = obj_tr.find('.col_new5').val()
+        StudentProfile.Message = obj_tr.find('.col_new6').val();
+        StudentProfile.Memo = obj_tr.find('.col_new7').val();
+
+        for (var i = 1; i <= colNum; i++) {
+            obj_tr.find('.col' + i).text(obj_tr.find('.col_new' + i).val());
+            obj_tr.find('.col' + i).show();
+            obj_tr.find('.col_new' + i).remove();
+        }
+
+        $.ajax({
+            url: '../api/StudentProfiles/',
+            type: 'PUT',
+            dataType: 'json',
+            data: StudentProfile,
+            success: function (data, textStatus, xhr) {
+                alert('修改成功');
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.log('Error in Operation');
+            }
+        });
     }
 
     function testDelete(guid) {
