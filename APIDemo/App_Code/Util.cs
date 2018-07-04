@@ -34,6 +34,22 @@ namespace APIDemo.App_Code
             return connStr;
         }
 
+        public static string getAppString(string appName)
+        {
+            string appString = "";
+
+            try
+            {
+                appString = WebConfigurationManager.AppSettings[appName];
+            }
+            catch (Exception e)
+            {
+                EventLog.WriteEntry(Const.AP_ID, getDebugMsg(MethodBase.GetCurrentMethod(), e.ToString()), EventLogEntryType.Error);
+            }
+
+            return appString;
+        }
+
         /// <summary>
         /// 取得秒數間隔
         /// </summary>

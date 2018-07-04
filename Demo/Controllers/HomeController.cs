@@ -26,5 +26,11 @@ namespace Demo.Controllers
             ViewBag.Test = "test";
             return View();
         }
+
+        public ActionResult TestCORS()
+        {
+            ViewBag.Message = "Your contact page.";
+            return View();
+        }
     }
 }
