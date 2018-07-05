@@ -168,12 +168,31 @@
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Include="Scripts\jquery-3.3.1.intellisense.js" />
-    <Content Include="Scripts\jquery-3.3.1.js" />
-    <Content Include="Scripts\jquery-3.3.1.min.js" />
-    <Content Include="Scripts\jquery-3.3.1.slim.js" />
-    <Content Include="Scripts\jquery-3.3.1.slim.min.js" />
+    <Content Include="Scripts\jQuery-3.3.1\jquery-3.3.1.min.map" />
+    <Content Include="Scripts\jQuery-3.3.1\jquery-3.3.1.slim.min.map" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\DataTables-1.10.18\css\dataTables.bootstrap.min.css" />
+    <Content Include="Scripts\DataTables-1.10.18\css\dataTables.bootstrap4.min.css" />
+    <Content Include="Scripts\DataTables-1.10.18\css\dataTables.foundation.min.css" />
+    <Content Include="Scripts\DataTables-1.10.18\css\dataTables.jqueryui.min.css" />
+    <Content Include="Scripts\DataTables-1.10.18\css\dataTables.semanticui.min.css" />
+    <Content Include="Scripts\DataTables-1.10.18\css\jquery.dataTables.min.css" />
+    <Content Include="Scripts\DataTables-1.10.18\images\sort_asc.png" />
+    <Content Include="Scripts\DataTables-1.10.18\images\sort_asc_disabled.png" />
+    <Content Include="Scripts\DataTables-1.10.18\images\sort_both.png" />
+    <Content Include="Scripts\DataTables-1.10.18\images\sort_desc.png" />
+    <Content Include="Scripts\DataTables-1.10.18\images\sort_desc_disabled.png" />
+    <Content Include="Scripts\DataTables-1.10.18\js\dataTables.bootstrap.min.js" />
+    <Content Include="Scripts\DataTables-1.10.18\js\dataTables.bootstrap4.min.js" />
+    <Content Include="Scripts\DataTables-1.10.18\js\dataTables.foundation.min.js" />
+    <Content Include="Scripts\DataTables-1.10.18\js\dataTables.jqueryui.min.js" />
+    <Content Include="Scripts\DataTables-1.10.18\js\dataTables.semanticui.min.js" />
+    <Content Include="Scripts\DataTables-1.10.18\js\jquery.dataTables.min.js" />
+    <None Include="Scripts\jQuery-3.3.1\jquery-3.3.1.intellisense.js" />
+    <Content Include="Scripts\jQuery-3.3.1\jquery-3.3.1.js" />
+    <Content Include="Scripts\jQuery-3.3.1\jquery-3.3.1.min.js" />
+    <Content Include="Scripts\jQuery-3.3.1\jquery-3.3.1.slim.js" />
+    <Content Include="Scripts\jQuery-3.3.1\jquery-3.3.1.slim.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
@@ -211,8 +230,6 @@
     <Content Include="Content\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
     <None Include="packages.config" />
-    <Content Include="Scripts\jquery-3.3.1.slim.min.map" />
-    <Content Include="Scripts\jquery-3.3.1.min.map" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
