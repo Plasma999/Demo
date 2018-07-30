@@ -32,7 +32,7 @@ namespace APIDemo.Controllers
             int maxSize = 1000;
             int recordSize = ds.Count();
             ds = ds.Take(maxSize);
-            return recordSize > maxSize ? "Data has " + recordSize + " records, only show top 1000 results." : "Data has " + recordSize + " records.";
+            return recordSize > maxSize ? "Data has " + recordSize + " records, only show top " + maxSize + " results." : "Data has " + recordSize + " records.";
         }
 
         // GET: api/StudentProfiles?guid=XXX
