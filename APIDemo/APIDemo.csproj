@@ -294,6 +294,7 @@
       <DependentUpon>Student.edmx</DependentUpon>
     </Content>
     <Content Include="App_Data\names.json" />
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jQuery-3.3.1\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\DataTables-1.10.18\css\dataTables.bootstrap.min.css" />
     <Content Include="Scripts\DataTables-1.10.18\css\dataTables.bootstrap4.min.css" />
