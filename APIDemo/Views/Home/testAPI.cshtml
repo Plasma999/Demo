@@ -59,8 +59,8 @@
         StudentProfile.guid = uuidv4();
         StudentProfile.Id = $('#add_id').val();
         StudentProfile.Name = $('#add_Name').val();
-        StudentProfile.Gender = $('#add_Gender').val();
-        StudentProfile.Blood = $('#add_Blood').val();
+        StudentProfile.Gender = $('input[name=add_Gender]:checked').val();
+        StudentProfile.Blood = $('input[name=add_Blood]:checked').val();
         StudentProfile.Height = $('#add_Height').val();
         StudentProfile.Weight = $('#add_Weight').val();
         StudentProfile.Coupon = $('#add_Coupon').val();
@@ -88,7 +88,17 @@
 
         for (var i = 1; i <= colNum; i++) {
             var oldSpan = $(event.target).parent().parent().find('.col' + i);
-            oldSpan.parent().append('<input type="text" class="col_new' + i + '" style="width:80px;" value="' + oldSpan.text() + '" />');
+
+            if (i == 3) {
+                oldSpan.parent().append('<select class="col_new' + i + '"><option value="M">Male</option><option value="F">Female</option></select>');
+                oldSpan.parent().find('.col_new' + i).val(oldSpan.text());
+            } else if (i == 4) {
+                oldSpan.parent().append('<select class="col_new' + i + '"><option value="A">A</option><option value="B">B</option><option value="AB">AB</option><option value="O">O</option></select>');
+                oldSpan.parent().find('.col_new' + i).val(oldSpan.text());
+            } else {
+                oldSpan.parent().append('<input type="text" class="col_new' + i + '" style="width:80px;" value="' + oldSpan.text() + '" />');
+            }
+            
             oldSpan.hide();
         }
     }
@@ -158,6 +168,10 @@
     }
 
     function testDeleteAll() {
+        if (!confirm('Are you sure to clean all data?')) {
+            return;
+        }
+
         $.ajax({
             url: '../api/StudentProfiles?all=yes',
             type: 'DELETE',
@@ -203,7 +217,7 @@
                         <table>
                             <tr>
                                 <td>Id</td>
-                                <td><input type="text" id="add_id" /></td>
+                                <td><input type="text" id="add_id" size="8" maxlength="10" /></td>
                             </tr>
                             <tr>
                                 <td>Name</td>
@@ -211,19 +225,31 @@
                             </tr>
                             <tr>
                                 <td>Gender</td>
-                                <td><input type="text" id="add_Gender" /></td>
+                                <td>
+                                    Male <input type="radio" name="add_Gender" value="M" />
+                                    &nbsp;
+                                    Female <input type="radio" name="add_Gender" value="F" />
+                                </td>
                             </tr>
                             <tr>
                                 <td>Blood</td>
-                                <td><input type="text" id="add_Blood" /></td>
+                                <td>
+                                    A <input type="radio" name="add_Blood" value="A" />
+                                    &nbsp;
+                                    B <input type="radio" name="add_Blood" value="B" />
+                                    &nbsp;
+                                    AB <input type="radio" name="add_Blood" value="AB" />
+                                    &nbsp;
+                                    O <input type="radio" name="add_Blood" value="O" />
+                                </td>
                             </tr>
                             <tr>
                                 <td>Height</td>
-                                <td><input type="text" id="add_Height" /></td>
+                                <td><input type="text" id="add_Height" size="3" maxlength="6" /> cm</td>
                             </tr>
                             <tr>
                                 <td>Weight</td>
-                                <td><input type="text" id="add_Weight" /></td>
+                                <td><input type="text" id="add_Weight" size="3" maxlength="6" /> kg</td>
                             </tr>
                             <tr>
                                 <td>Coupon</td>
