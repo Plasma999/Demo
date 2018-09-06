@@ -32,16 +32,16 @@
         $.getJSON(api, function (result) {
             $('#span_msg').text(result.msg);
             
-            $('#table1').html('<thead><tr><th>Id</th><th>Name</th><th>Address</th><th>Email</th><th>Tel</th><th>Message</th><th>Memo</th><th></th></tr></thead><tbody>');
+            $('#table1').html('<thead><tr><th>Id</th><th>Name</th><th>Gender</th><th>Blood</th><th>Height</th><th>Weight</th><th>Coupon</th><th></th></tr></thead><tbody>');
             $.each(result.ds, function (i, item) {
                 var $tr = $('<tr>').append(
                     $('<td>').html('<span class="col1">' + item.Id + '</span>'),
                     $('<td>').html('<span class="col2">' + item.Name + '</span>'),
-                    $('<td>').html('<span class="col3">' + item.Address + '</span>'),
-                    $('<td>').html('<span class="col4">' + item.Email + '</span>'),
-                    $('<td>').html('<span class="col5">' + item.Tel + '</span>'),
-                    $('<td>').html('<span class="col6">' + item.Message + '</span>'),
-                    $('<td>').html('<span class="col7">' + item.Memo + '</span>'),
+                    $('<td>').html('<span class="col3">' + item.Gender + '</span>'),
+                    $('<td>').html('<span class="col4">' + item.Blood + '</span>'),
+                    $('<td>').html('<span class="col5">' + item.Height + '</span>'),
+                    $('<td>').html('<span class="col6">' + item.Weight + '</span>'),
+                    $('<td>').html('<span class="col7">' + item.Coupon + '</span>'),
                     $('<td>').html('<input type="button" class="normal" value="修改" onclick="toUpdate();" /> <input type="button" style="display:none" class="toUpdate" value="確定修改" onclick="testPut(\'' + item.guid + '\');" /> <input type="button" style="display:none" class="toUpdate" value="取消" onclick="cancelUpdate();" /> <input type="button" class="normal" value="刪除" onclick="testDelete(\'' + item.guid + '\');" />')
                 ).appendTo('#table1');
             });
@@ -59,11 +59,11 @@
         StudentProfile.guid = uuidv4();
         StudentProfile.Id = $('#add_id').val();
         StudentProfile.Name = $('#add_Name').val();
-        StudentProfile.Address = $('#add_Address').val();
-        StudentProfile.Email = $('#add_Email').val();
-        StudentProfile.Tel = $('#add_Tel').val();
-        StudentProfile.Message = $('#add_Message').val();
-        StudentProfile.Memo = $('#add_Memo').val();
+        StudentProfile.Gender = $('#add_Gender').val();
+        StudentProfile.Blood = $('#add_Blood').val();
+        StudentProfile.Height = $('#add_Height').val();
+        StudentProfile.Weight = $('#add_Weight').val();
+        StudentProfile.Coupon = $('#add_Coupon').val();
 
         $.ajax({
             url: '../api/StudentProfiles/',
@@ -113,11 +113,11 @@
         StudentProfile.guid = guid;
         StudentProfile.Id = obj_tr.find('.col_new1').val();
         StudentProfile.Name = obj_tr.find('.col_new2').val();
-        StudentProfile.Address = obj_tr.find('.col_new3').val();
-        StudentProfile.Email = obj_tr.find('.col_new4').val();
-        StudentProfile.Tel = obj_tr.find('.col_new5').val()
-        StudentProfile.Message = obj_tr.find('.col_new6').val();
-        StudentProfile.Memo = obj_tr.find('.col_new7').val();
+        StudentProfile.Gender = obj_tr.find('.col_new3').val();
+        StudentProfile.Blood = obj_tr.find('.col_new4').val();
+        StudentProfile.Height = obj_tr.find('.col_new5').val()
+        StudentProfile.Weight = obj_tr.find('.col_new6').val();
+        StudentProfile.Coupon = obj_tr.find('.col_new7').val();
 
         for (var i = 1; i <= colNum; i++) {
             obj_tr.find('.col' + i).text(obj_tr.find('.col_new' + i).val());
@@ -207,24 +207,24 @@
                                 <td><input type="text" id="add_Name" /></td>
                             </tr>
                             <tr>
-                                <td>Address</td>
-                                <td><input type="text" id="add_Address" /></td>
+                                <td>Gender</td>
+                                <td><input type="text" id="add_Gender" /></td>
                             </tr>
                             <tr>
-                                <td>Email</td>
-                                <td><input type="text" id="add_Email" /></td>
+                                <td>Blood</td>
+                                <td><input type="text" id="add_Blood" /></td>
                             </tr>
                             <tr>
-                                <td>Tel</td>
-                                <td><input type="text" id="add_Tel" /></td>
+                                <td>Height</td>
+                                <td><input type="text" id="add_Height" /></td>
                             </tr>
                             <tr>
-                                <td>Message</td>
-                                <td><input type="text" id="add_Message" /></td>
+                                <td>Weight</td>
+                                <td><input type="text" id="add_Weight" /></td>
                             </tr>
                             <tr>
-                                <td>Memo</td>
-                                <td><input type="text" id="add_Memo" /></td>
+                                <td>Coupon</td>
+                                <td><input type="text" id="add_Coupon" /></td>
                             </tr>
                         </table>
                         <input type="button" class="btn btn-defaultc2 btn-lg2" value="insert" onclick="testPost();" />

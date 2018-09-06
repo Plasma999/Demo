@@ -59,14 +59,22 @@
                             Test Data Number:
                             <input type="text" id="testNum" size="8" value="50000" />
                         </p>
-                        <p>Method 1: EntityFramework insert data</p>
-                        <input type="button" class="btn btn-defaultc2 btn-lg2" value="GO" onclick="massInsert('EF_AddRange');" />
-
-                        <p>Method 2: SqlBulkCopy insert data</p>
-                        <input type="button" class="btn btn-defaultc2 btn-lg2" value="GO" onclick="massInsert('SqlBulkCopy');" />
-
-                        <p>Method 3: TVP(Table Value Parameter) insert data</p>
-                        <input type="button" class="btn btn-defaultc2 btn-lg2" value="GO" onclick="massInsert('TVP');" />
+                        <p>
+                            Method 1: ADO.NET for loop insert data
+                            <input type="button" class="btn btn-defaultc2 btn-lg2" value="GO" onclick="massInsert('ADO_For');" />
+                        </p>
+                        <p>
+                            Method 2: EntityFramework insert data
+                            <input type="button" class="btn btn-defaultc2 btn-lg2" value="GO" onclick="massInsert('EF_AddRange');" />
+                        </p>
+                        <p>
+                            Method 3: SqlBulkCopy insert data
+                            <input type="button" class="btn btn-defaultc2 btn-lg2" value="GO" onclick="massInsert('SqlBulkCopy');" />
+                        </p>
+                        <p>
+                            Method 4: TVP(Table Value Parameter) insert data
+                            <input type="button" class="btn btn-defaultc2 btn-lg2" value="GO" onclick="massInsert('TVP');" />
+                        </p>
                         <p>
                             <span id="span_result" style="color:blue;font-size:14px;" />
                         </p>

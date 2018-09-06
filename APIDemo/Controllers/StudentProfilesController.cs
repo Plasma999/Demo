@@ -106,22 +106,43 @@ namespace APIDemo.Controllers
             }
 
             var studentProfileList = new List<StudentProfile>();
+
+            var randomID = new RandomID();
+            List<string> randomIDs = randomID.getRandomIDs(num);
+
+            DateTime time_id_done = DateTime.Now;
+            result += "generate ID costs " + Util.getSecond(time_start, time_id_done) + " sec, ";
+
             var randomName = new RandomName(new Random());
             List<string> randomNames = randomName.RandomNames(num, 2, null, null);
 
             DateTime time_name_done = DateTime.Now;
-            result += "generate Name costs " + Util.getSecond(time_start, time_name_done) + " sec, ";
+            result += "generate Name costs " + Util.getSecond(time_id_done, time_name_done) + " sec, ";
+
+            List<string> randomGenders = Util.getRandomList(Const.Gender, num);
+            List<string> randomBloods = Util.getRandomList(Const.Blood, num);
+            List<decimal> randomHeights = Util.getRandomDecimalList(150, 200, 1, num);
+            List<decimal> randomWeights = Util.getRandomDecimalList(40, 100, 1, num);
+
+            DateTime time_other_done = DateTime.Now;
+            result += "generate other columns costs " + Util.getSecond(time_name_done, time_other_done) + " sec, ";
 
             for (int i = 0; i < num; i++)
             {
                 var item = new StudentProfile();
                 item.guid = Guid.NewGuid();
+                item.Id = randomIDs[i];
                 item.Name = randomNames[i];
+                item.Gender = randomGenders[i];
+                item.Blood = randomBloods[i];
+                item.Height = randomHeights[i];
+                item.Weight = randomWeights[i];
+                item.CreateDate = DateTime.Now;
                 studentProfileList.Add(item);
             }
 
             DateTime time_list_done = DateTime.Now;
-            result += "put into List costs " + Util.getSecond(time_name_done, time_list_done) + " sec, ";
+            result += "put into List costs " + Util.getSecond(time_other_done, time_list_done) + " sec, ";
 
             bool db_result = false;
             switch (type)
@@ -149,7 +170,7 @@ namespace APIDemo.Controllers
             }
 
             DateTime time_db_done = DateTime.Now;
-            result += "save to DB costs " + Util.getSecond(time_list_done, time_db_done) + "sec, ";
+            result += "save to DB costs " + Util.getSecond(time_list_done, time_db_done) + " sec, ";
 
             DateTime time_end = DateTime.Now;
             result += "total costs " + Util.getSecond(time_start, time_end) + " sec.";
@@ -165,12 +186,13 @@ namespace APIDemo.Controllers
             try
             {
                 sc = new SqlConnection(connStr);
-                string sql = @"insert into StudentProfile (guid, Name)
-                    values ({0}, {1})";
+                string sql = @"insert into StudentProfile (guid, Id, Name, Gender, Blood, Height, Weight)
+                    values ({0}, {1}, {2}, {3}, {4}, {5}, {6})";
 
                 foreach (var studentProfile in studentProfileList)
                 {
-                    string[] param = new string[] { studentProfile.guid.ToString(), studentProfile.Id };
+                    string[] param = new string[] { studentProfile.guid.ToString(), studentProfile.Id, studentProfile.Name, studentProfile.Gender, studentProfile.Blood,
+                        studentProfile.Height.ToString(), studentProfile.Weight.ToString() };
                     DbUtil.ExecuteSqlNoReturn(sql, param, sc);
                 }
 
@@ -234,8 +256,8 @@ namespace APIDemo.Controllers
             try
             {
                 //欄位名稱與型態
-                columnNames = new string[] { "guid", "Id", "Name", "Address", "Email", "Tel", "Message", "Memo" };
-                Type[] columnTypes = new Type[] { typeof(Guid), typeof(string), typeof(string), typeof(string), typeof(string), typeof(string), typeof(string), typeof(string) };
+                columnNames = new string[] { "guid", "Id", "Name", "Gender", "Blood", "Height", "Weight", "Coupon", "CreateDate", "UpdateDate" };
+                Type[] columnTypes = new Type[] { typeof(Guid), typeof(string), typeof(string), typeof(string), typeof(string), typeof(decimal), typeof(decimal), typeof(string), typeof(DateTime), typeof(DateTime) };
                 if (columnNames.Length != columnTypes.Length)
                 {
                     throw new ArgumentException("columnNames and columnTypes are not mapping.");
@@ -252,7 +274,13 @@ namespace APIDemo.Controllers
                 {
                     DataRow dr = dt.NewRow();
                     dr["guid"] = studentProfileList[i].guid;
+                    dr["Id"] = studentProfileList[i].Id;
                     dr["Name"] = studentProfileList[i].Name;
+                    dr["Gender"] = studentProfileList[i].Gender;
+                    dr["Blood"] = studentProfileList[i].Blood;
+                    dr["Height"] = studentProfileList[i].Height;
+                    dr["Weight"] = studentProfileList[i].Weight;
+                    dr["CreateDate"] = studentProfileList[i].CreateDate;
                     dt.Rows.Add(dr);
                 }
 

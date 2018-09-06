@@ -10,17 +10,18 @@
 namespace APIDemo.Models
 {
     using System;
-    using System.Collections.Generic;
-    
+
     public partial class StudentProfile
     {
         public System.Guid guid { get; set; }
         public string Id { get; set; }
         public string Name { get; set; }
-        public string Address { get; set; }
-        public string Email { get; set; }
-        public string Tel { get; set; }
-        public string Message { get; set; }
-        public string Memo { get; set; }
+        public string Gender { get; set; }
+        public string Blood { get; set; }
+        public Nullable<decimal> Height { get; set; }
+        public Nullable<decimal> Weight { get; set; }
+        public string Coupon { get; set; }
+        public Nullable<System.DateTime> CreateDate { get; set; }
+        public Nullable<System.DateTime> UpdateDate { get; set; }
     }
 }

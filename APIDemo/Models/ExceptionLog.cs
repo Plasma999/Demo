@@ -9,9 +9,6 @@
 
 namespace APIDemo.Models
 {
-    using System;
-    using System.Collections.Generic;
-    
     public partial class ExceptionLog
     {
         public string AP_ID { get; set; }

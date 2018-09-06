@@ -19,13 +19,15 @@
             <PropertyRef Name="guid" />
           </Key>
           <Property Name="guid" Type="uniqueidentifier" Nullable="false" />
-          <Property Name="Id" Type="varchar" MaxLength="50" />
+          <Property Name="Id" Type="varchar" MaxLength="12" />
           <Property Name="Name" Type="nvarchar" MaxLength="50" />
-          <Property Name="Address" Type="nvarchar" MaxLength="200" />
-          <Property Name="Email" Type="varchar" MaxLength="100" />
-          <Property Name="Tel" Type="varchar" MaxLength="40" />
-          <Property Name="Message" Type="nvarchar" MaxLength="1000" />
-          <Property Name="Memo" Type="nvarchar" MaxLength="100" />
+          <Property Name="Gender" Type="varchar" MaxLength="2" />
+          <Property Name="Blood" Type="varchar" MaxLength="3" />
+          <Property Name="Height" Type="decimal" Precision="6" Scale="2" />
+          <Property Name="Weight" Type="decimal" Precision="6" Scale="2" />
+          <Property Name="Coupon" Type="varchar" MaxLength="15" />
+          <Property Name="CreateDate" Type="datetime" />
+          <Property Name="UpdateDate" Type="datetime" />
         </EntityType>
         <EntityContainer Name="StudentModelStoreContainer">
           <EntitySet Name="ExceptionLog" EntityType="Self.ExceptionLog" Schema="dbo" store:Type="Tables" />
@@ -40,13 +42,15 @@
             <PropertyRef Name="guid" />
           </Key>
           <Property Name="guid" Type="Guid" Nullable="false" />
-          <Property Name="Id" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Id" Type="String" MaxLength="12" FixedLength="false" Unicode="false" />
           <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Address" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="Email" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="Tel" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
-          <Property Name="Message" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
-          <Property Name="Memo" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Gender" Type="String" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="Blood" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="Height" Type="Decimal" Precision="6" Scale="2" />
+          <Property Name="Weight" Type="Decimal" Precision="6" Scale="2" />
+          <Property Name="Coupon" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="CreateDate" Type="DateTime" Precision="3" />
+          <Property Name="UpdateDate" Type="DateTime" Precision="3" />
         </EntityType>
         <EntityContainer Name="StudentDB" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="StudentProfile" EntityType="Self.StudentProfile" />
@@ -70,15 +74,17 @@
           <EntitySetMapping Name="StudentProfile">
             <EntityTypeMapping TypeName="StudentModel.StudentProfile">
               <MappingFragment StoreEntitySet="StudentProfile">
-                <ScalarProperty Name="Memo" ColumnName="Memo" />
+                <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="Coupon" ColumnName="Coupon" />
+                <ScalarProperty Name="Weight" ColumnName="Weight" />
+                <ScalarProperty Name="Height" ColumnName="Height" />
+                <ScalarProperty Name="Blood" ColumnName="Blood" />
+                <ScalarProperty Name="Gender" ColumnName="Gender" />
                 <ScalarProperty Name="guid" ColumnName="guid" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Address" ColumnName="Address" />
-                <ScalarProperty Name="Email" ColumnName="Email" />
-                <ScalarProperty Name="Tel" ColumnName="Tel" />
-                <ScalarProperty Name="Message" ColumnName="Message" />
-              </MappingFragment>
+                </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="ExceptionLog">
