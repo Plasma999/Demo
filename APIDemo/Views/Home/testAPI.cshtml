@@ -119,12 +119,6 @@
         StudentProfile.Weight = obj_tr.find('.col_new6').val();
         StudentProfile.Coupon = obj_tr.find('.col_new7').val();
 
-        for (var i = 1; i <= colNum; i++) {
-            obj_tr.find('.col' + i).text(obj_tr.find('.col_new' + i).val());
-            obj_tr.find('.col' + i).show();
-            obj_tr.find('.col_new' + i).remove();
-        }
-
         $.ajax({
             url: '../api/StudentProfiles/',
             type: 'PUT',
@@ -132,9 +126,18 @@
             data: StudentProfile,
             success: function (data, textStatus, xhr) {
                 alert('修改成功');
+                for (var i = 1; i <= colNum; i++) {
+                    obj_tr.find('.col' + i).text(obj_tr.find('.col_new' + i).val());
+                }
             },
             error: function (xhr, textStatus, errorThrown) {
-                console.log('Error in Operation');
+                alert(errorThrown);
+            },
+            complete: function () {
+                for (var i = 1; i <= colNum; i++) {
+                    obj_tr.find('.col' + i).show();
+                    obj_tr.find('.col_new' + i).remove();
+                }
             }
         });
     }
