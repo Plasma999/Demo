@@ -72,6 +72,11 @@ namespace APIDemo.Controllers
                 return BadRequest(ModelState);
             }
 
+            if (studentProfile.CreateDate == null)
+            {
+                studentProfile.CreateDate = DateTime.Now;
+            }
+
             db.StudentProfile.Add(studentProfile);
 
             try
