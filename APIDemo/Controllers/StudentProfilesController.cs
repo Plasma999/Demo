@@ -72,11 +72,15 @@ namespace APIDemo.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (studentProfile.CreateDate == null)
+            if (studentProfile.Height == null)
             {
-                studentProfile.CreateDate = DateTime.Now;
+                studentProfile.Height = 0;
             }
-
+            if (studentProfile.Weight == null)
+            {
+                studentProfile.Weight = 0;
+            }
+            studentProfile.CreateDate = DateTime.Now;
             db.StudentProfile.Add(studentProfile);
 
             try
@@ -331,10 +335,19 @@ namespace APIDemo.Controllers
                 return BadRequest(ModelState);
             }
 
-            db.Entry(studentProfile).State = EntityState.Modified;
+            replaceStudentProfileNull(studentProfile);
 
             try
             {
+                var record = db.StudentProfile.First(s => s.guid == studentProfile.guid);
+                record.Id = studentProfile.Id;
+                record.Name = studentProfile.Name;
+                record.Gender = studentProfile.Gender;
+                record.Blood = studentProfile.Blood;
+                record.Height = studentProfile.Height;
+                record.Weight = studentProfile.Weight;
+                record.Coupon = studentProfile.Coupon;
+                record.UpdateDate = DateTime.Now;
                 db.SaveChanges();
             }
             catch (DbUpdateConcurrencyException)
@@ -350,6 +363,30 @@ namespace APIDemo.Controllers
             }
 
             return StatusCode(HttpStatusCode.NoContent);
+        }
+
+        private void replaceStudentProfileNull(StudentProfile studentProfile)
+        {
+            if (!string.IsNullOrEmpty(studentProfile.Id) && studentProfile.Id.ToLower() == "null")
+            {
+                studentProfile.Id = null;
+            }
+            if (!string.IsNullOrEmpty(studentProfile.Name) && studentProfile.Name.ToLower() == "null")
+            {
+                studentProfile.Name = null;
+            }
+            if (!string.IsNullOrEmpty(studentProfile.Gender) && studentProfile.Gender.ToLower() == "null")
+            {
+                studentProfile.Gender = null;
+            }
+            if (!string.IsNullOrEmpty(studentProfile.Blood) && studentProfile.Blood.ToLower() == "null")
+            {
+                studentProfile.Blood = null;
+            }
+            if (!string.IsNullOrEmpty(studentProfile.Coupon) && studentProfile.Coupon.ToLower() == "null")
+            {
+                studentProfile.Coupon = null;
+            }
         }
 
         //TODO PUT: api/StudentProfiles?num=N&type=XXX  更新N筆
