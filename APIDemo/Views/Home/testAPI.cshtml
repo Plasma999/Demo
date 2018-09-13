@@ -98,7 +98,7 @@
                 oldSpan.parent().append('<select class="col_new' + i + '"><option value="A">A</option><option value="B">B</option><option value="AB">AB</option><option value="O">O</option></select>');
                 oldSpan.parent().find('.col_new' + i).val(oldSpan.text());
             } else if (i == 5 || i == 6) {
-                oldSpan.parent().append('<input type="text" class="col_new' + i + '" size="3" maxlength="6" onkeydown="typeNumberOnly(event);" onblur="checkNumber(this);" value="' + oldSpan.text() + '" />');
+                oldSpan.parent().append('<input type="text" class="col_new' + i + '" style="width:50px;" maxlength="6" onkeydown="typeNumberOnly(event);" onblur="checkNumber(this);" value="' + oldSpan.text() + '" />');
             } else {
                 oldSpan.parent().append('<input type="text" class="col_new' + i + '" style="width:80px;" value="' + oldSpan.text() + '" />');
             }
@@ -248,7 +248,7 @@
                     </p>
                     <p>
                         Search ID
-                        <input type="text" id="input_getId" />
+                        <input type="text" id="input_getId" style="width: 140px;" maxlength="10" />
                         <input type="button" class="btn btn-defaultc2 btn-lg2" value="GO" onclick="testGet();" />
                     </p>
                     <p>
@@ -258,7 +258,7 @@
                         <table>
                             <tr>
                                 <td>Id</td>
-                                <td><input type="text" id="add_id" size="8" maxlength="10" /></td>
+                                <td><input type="text" id="add_id" style="width: 100px;" maxlength="10" /></td>
                             </tr>
                             <tr>
                                 <td>Name</td>
@@ -286,11 +286,11 @@
                             </tr>
                             <tr>
                                 <td>Height</td>
-                                <td><input type="text" id="add_Height" size="3" maxlength="6" onkeydown="typeNumberOnly(event);" onblur="checkNumber(this);" /> cm</td>
+                                <td><input type="text" id="add_Height" style="width: 60px;" maxlength="6" onkeydown="typeNumberOnly(event);" onblur="checkNumber(this);" /> cm</td>
                             </tr>
                             <tr>
                                 <td>Weight</td>
-                                <td><input type="text" id="add_Weight" size="3" maxlength="6" onkeydown="typeNumberOnly(event);" onblur="checkNumber(this);" /> kg</td>
+                                <td><input type="text" id="add_Weight" style="width: 60px;" maxlength="6" onkeydown="typeNumberOnly(event);" onblur="checkNumber(this);" /> kg</td>
                             </tr>
                             <tr>
                                 <td>Coupon</td>
