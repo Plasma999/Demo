@@ -16,7 +16,7 @@
     }
 
     function testGet() {
-        var id = $('#input_getId').val();
+        var id = $('#search_Id').val();
         get(id);
     }
 
@@ -161,7 +161,7 @@
             url: '../api/StudentProfiles?guid=' + guid,
             type: 'DELETE',
             dataType: 'json',
-            success: function (data, textStatus, xhr) {
+            success: function (data, textStatus, xhr) { 
                 alert('刪除成功');
                 testGetAll();
             },
@@ -226,6 +226,84 @@
             input.focus();
         }
     }
+
+    function betweenAdd(filter) {
+        var select = $('#select_' + filter);
+        if (select.val() == 'between') {
+            select.parent().append('<span> and <input type="text" id="search_' + filter + '2" style="width: 60px;" maxlength="6" onkeydown="typeNumberOnly(event);" onblur="checkNumber(this);" /></span>');
+        }
+        else {
+            select.parent().find('span').remove();
+        }
+    }
+
+    function addFilter() {
+        var filter = $('#search_filter').val();
+        var removeIcon = '<img src="/icons/remove.png" class="removeIcon" style="display:none; cursor:pointer;" height="20" width="20" onclick="removeFilter(\'' + filter + '\');" />';
+        var operator = '';
+
+        //新增過濾條件
+        if (filter == 'Id' || filter == 'Name' || filter == 'Coupon') {
+            operator = '<select id = "select_' + filter +'">' +
+                '<option value="equal">=</option>' +
+                '<option value="like">like</option>' +
+                '</select>';
+            $('#div_filter').append('<div>' + removeIcon + ' ' + filter + ' ' + operator + ' <input type="text" id="search_' + filter + '" style="width: 100px;" /></div>');
+        } else if (filter == 'Height' || filter == 'Weight') {
+            operator = '<select id = "select_' + filter + '" onchange="betweenAdd(\'' + filter + '\');">' +
+                '<option value="equal">=</option>' +
+                '<option value="moreThan">></option>' +
+                '<option value="moreThanOrEqual">>=</option>' +
+                '<option value="lessThan"><</option>' +
+                '<option value="lessThanOrEqual"><=</option>' +
+                '<option value="between">between</option>' +
+                '</select>';
+            $('#div_filter').append('<div>' + removeIcon + ' ' + filter + ' ' + operator + ' <input type="text" id="search_' + filter + '" style="width: 60px;" maxlength="6" onkeydown="typeNumberOnly(event);" onblur="checkNumber(this);" /></div>');
+        } else if (filter == 'Gender') {
+            operator = '&nbsp; Male <input type="radio" name="' + filter + '" value="M" /> &nbsp;' +
+                'Female <input type="radio" name="' + filter + '" value="F" />';
+            $('#div_filter').append('<div>' + removeIcon + ' ' + filter + ' ' + operator + '</div>');
+        } else if (filter == 'Blood') {
+            operator = '&nbsp; A <input type="checkbox" name="' + filter + '" value="A" /> &nbsp;' +
+                'B <input type="checkbox" name="' + filter + '" value="B" /> &nbsp;' +
+                'AB <input type="checkbox" name="' + filter + '" value="AB" /> &nbsp;' +
+                'O <input type="checkbox" name="' + filter + '" value="O" />';
+            $('#div_filter').append('<div>' + removeIcon + ' ' + filter + ' ' + operator + '</div>');
+        }
+
+        //移除可選的選項
+        $("#search_filter :selected").remove();
+        if ($('select#search_filter option').length == 0) {
+            $('#search_filter').hide();
+            $('#filter_plus').hide();
+        }
+
+        //顯示remove icon
+        $('#filterNum').val(parseInt($('#filterNum').val(), 10) + 1);
+        var filterNum = parseInt($('#filterNum').val(), 10)
+        if (filterNum > 1) {
+            $('.removeIcon').show();
+        }
+    }
+
+    function removeFilter(filter) {
+        //刪除過濾條件
+        $(event.target).parent().remove();
+
+        //新增可選的選項
+        $('#search_filter').append($("<option></option>").attr("value", filter).text(filter));
+        if ($('select#search_filter option').length > 0) {
+            $('#search_filter').show();
+            $('#filter_plus').show();
+        }
+
+        //隱藏remove icon
+        $('#filterNum').val(parseInt($('#filterNum').val(), 10) - 1);
+        var filterNum = parseInt($('#filterNum').val(), 10)
+        if (filterNum == 1) {
+            $('.removeIcon').hide();
+        }
+    }
 </script>
 <section class="sections">
     <div class="container txtWidth">
@@ -247,9 +325,26 @@
                         <input type="button" class="btn btn-defaultc2 btn-lg2" value="GO" onclick="testGetAll();" />
                     </p>
                     <p>
-                        Search ID
-                        <input type="text" id="input_getId" style="width: 140px;" maxlength="10" />
-                        <input type="button" class="btn btn-defaultc2 btn-lg2" value="GO" onclick="testGet();" />
+                        Search Filter
+                        <select id="search_filter" style="font-size: 15px;">
+                            <option value="Name">Name</option>
+                            <option value="Gender">Gender</option>
+                            <option value="Blood">Blood</option>
+                            <option value="Height">Height</option>
+                            <option value="Weight">Weight</option>
+                            <option value="Coupon">Coupon</option>
+                        </select>
+                        <img id="filter_plus" src="~/icons/plus.png" style="cursor:pointer;" height="20" width="20" onclick="addFilter();" />
+                        <input type="hidden" id="filterNum" value="1" />
+                        <div id="div_filter">
+                            <div>
+                                <img src="~/icons/remove.png" class="removeIcon" style="display:none; cursor:pointer;" height="20" width="20" onclick="removeFilter('Id');" />
+                                Id <select id="select_Id"><option value="equal">=</option><option value="like">like</option></select>
+                                <input type="text" id="search_Id" style="width: 100px;" maxlength="10" />
+                            </div>
+                        </div>
+                        <br />
+                        <input type="button" class="btn btn-defaultc2 btn-lg2" value="Search" onclick="testGet();" />
                     </p>
                     <p>
                         Insert a new student data

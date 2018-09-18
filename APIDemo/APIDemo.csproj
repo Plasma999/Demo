@@ -242,6 +242,8 @@
     <Content Include="icons\demo.jpg" />
     <Content Include="icons\demo.png" />
     <Content Include="icons\loading.gif" />
+    <Content Include="icons\plus.png" />
+    <Content Include="icons\remove.png" />
     <Content Include="Scripts\datatables.min.css" />
     <Content Include="Content\fonts.css" />
     <Content Include="Content\jquery.smartmenus.bootstrap.css" />
