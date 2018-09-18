@@ -31,7 +31,7 @@
 
         $.getJSON(api, function (result) {
             $('#span_msg').text(result.msg);
-            
+
             $('#table1').html('<thead><tr><th>Id</th><th>Name</th><th>Gender</th><th>Blood</th><th>Height</th><th>Weight</th><th>Coupon</th><th></th></tr></thead><tbody>');
             $.each(result.ds, function (i, item) {
                 var $tr = $('<tr>').append(
@@ -102,7 +102,7 @@
             } else {
                 oldSpan.parent().append('<input type="text" class="col_new' + i + '" style="width:80px;" value="' + oldSpan.text() + '" />');
             }
-            
+
             oldSpan.hide();
         }
     }
@@ -161,7 +161,7 @@
             url: '../api/StudentProfiles?guid=' + guid,
             type: 'DELETE',
             dataType: 'json',
-            success: function (data, textStatus, xhr) { 
+            success: function (data, textStatus, xhr) {
                 alert('刪除成功');
                 testGetAll();
             },
@@ -239,7 +239,7 @@
 
     function addFilter() {
         var filter = $('#search_filter').val();
-        var removeIcon = '<img src="/icons/remove.png" class="removeIcon" style="display:none; cursor:pointer;" height="20" width="20" onclick="removeFilter(\'' + filter + '\');" />';
+        var removeIcon = '<img src="../icons/remove.png" class="removeIcon" style="display:none; cursor:pointer;" height="20" width="20" onclick="removeFilter(\'' + filter + '\');" />';
         var operator = '';
 
         //新增過濾條件
@@ -338,7 +338,7 @@
                         <input type="hidden" id="filterNum" value="1" />
                         <div id="div_filter">
                             <div>
-                                <img src="~/icons/remove.png" class="removeIcon" style="display:none; cursor:pointer;" height="20" width="20" onclick="removeFilter('Id');" />
+                                <img src="../icons/remove.png" class="removeIcon" style="display:none; cursor:pointer;" height="20" width="20" onclick="removeFilter('Id');" />
                                 Id <select id="select_Id"><option value="equal">=</option><option value="like">like</option></select>
                                 <input type="text" id="search_Id" style="width: 100px;" maxlength="10" />
                             </div>
