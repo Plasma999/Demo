@@ -29,6 +29,14 @@
           <Property Name="CreateDate" Type="datetime" />
           <Property Name="UpdateDate" Type="datetime" />
         </EntityType>
+        <Function Name="StudentProfile_Sel" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Id_operator" Type="varchar" Mode="In" />
+          <Parameter Name="Id_value" Type="varchar" Mode="In" />
+          <Parameter Name="Name_operator" Type="varchar" Mode="In" />
+          <Parameter Name="Name_value" Type="varchar" Mode="In" />
+          <Parameter Name="Coupon_operator" Type="varchar" Mode="In" />
+          <Parameter Name="Coupon_value" Type="varchar" Mode="In" />
+        </Function>
         <EntityContainer Name="StudentModelStoreContainer">
           <EntitySet Name="ExceptionLog" EntityType="Self.ExceptionLog" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="StudentProfile" EntityType="Self.StudentProfile" Schema="dbo" store:Type="Tables" />
@@ -55,6 +63,14 @@
         <EntityContainer Name="StudentDB" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="StudentProfile" EntityType="Self.StudentProfile" />
           <EntitySet Name="ExceptionLog" EntityType="StudentModel.ExceptionLog" />
+          <FunctionImport Name="StudentProfile_Sel" EntitySet="StudentProfile" ReturnType="Collection(StudentModel.StudentProfile)">
+            <Parameter Name="Id_operator" Mode="In" Type="String" />
+            <Parameter Name="Id_value" Mode="In" Type="String" />
+            <Parameter Name="Name_operator" Mode="In" Type="String" />
+            <Parameter Name="Name_value" Mode="In" Type="String" />
+            <Parameter Name="Coupon_operator" Mode="In" Type="String" />
+            <Parameter Name="Coupon_value" Mode="In" Type="String" />
+          </FunctionImport>
         </EntityContainer>
         <EntityType Name="ExceptionLog">
           <Key>
@@ -97,6 +113,7 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="StudentProfile_Sel" FunctionName="StudentModel.Store.StudentProfile_Sel" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

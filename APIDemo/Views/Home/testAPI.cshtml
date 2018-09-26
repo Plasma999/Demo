@@ -12,21 +12,53 @@
     }
 
     function testGetAll() {
-        get('');
+        get('','','','','','','');
     }
 
     function testGet() {
-        var id = $('#search_Id').val();
-        get(id);
+        var id_syntax = '';
+        var name_syntax = '';
+        var gender_syntax = '';
+        var blood_syntax = '';
+        var height_syntax = '';
+        var weight_syntax = '';
+        var coupon_syntax = '';
+        if ($('#select_Id').length > 0) {
+            id_syntax = $('#select_Id').val() + '|' + $('#search_Id').val().replace(/%/g,'percentage');
+        }
+        if ($('#select_Name').length > 0) {
+            name_syntax = $('#select_Name').val() + '|' + $('#search_Name').val().replace(/%/g, 'percentage');
+        }
+        if ($('#select_Coupon').length > 0) {
+            coupon_syntax = $('#select_Coupon').val() + '|' + $('#search_Coupon').val().replace(/%/g, 'percentage');
+        }
+        
+        get(id_syntax, name_syntax, gender_syntax, blood_syntax, height_syntax, weight_syntax, coupon_syntax);
     }
 
-    function get(id) {
+    function get(id_syntax, name_syntax, gender_syntax, blood_syntax, height_syntax, weight_syntax, coupon_syntax) {
+        var noNeed = 'noNeed';
         $('#loading').show();
         $('#span_table').html('<table id="table1" style="font-size:12px;"></table>');  //初始化table1
 
-        var api = "../api/StudentProfiles";
-        if (id != '') {
-            api += '/' + id;
+        var api = "../api/StudentProfiles/";
+        if (id_syntax == '' && name_syntax == '' && gender_syntax == '' && blood_syntax == '' && height_syntax == '' && weight_syntax == '' && coupon_syntax == '') {
+
+        }
+        else {  //組API url: api/StudentProfiles/{Id}?Name={Name}&Gender={Gender}&Blood={Blood}&Height={Height}&Weight={Weight}&Coupon={Coupon}
+            api += id_syntax == '' ? noNeed : id_syntax;
+            api += "?Name=";
+            api += name_syntax == '' ? noNeed : name_syntax;
+            api += "&Gender=";
+            api += gender_syntax == '' ? noNeed : gender_syntax;
+            api += "&Blood=";
+            api += blood_syntax == '' ? noNeed : blood_syntax;
+            api += "&Height=";
+            api += height_syntax == '' ? noNeed : height_syntax;
+            api += "&Weight=";
+            api += weight_syntax == '' ? noNeed : weight_syntax;
+            api += "&Coupon=";
+            api += coupon_syntax == '' ? noNeed : coupon_syntax;
         }
 
         $.getJSON(api, function (result) {
@@ -50,6 +82,9 @@
                     { "orderable": false, "targets": 7 }  //第七個欄位取消排序
                 ]
             });
+        }).fail(function (jqXHR, textStatus, errorThrown) {
+            alert(jqXHR.responseJSON.Message);
+        }).always(function () {
             $('#loading').hide();
         });
     }

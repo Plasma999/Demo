@@ -12,6 +12,8 @@ namespace APIDemo.Models
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Core.Objects;
+    using System.Linq;
     
     public partial class StudentDB : DbContext
     {
@@ -27,5 +29,63 @@ namespace APIDemo.Models
     
         public virtual DbSet<StudentProfile> StudentProfile { get; set; }
         public virtual DbSet<ExceptionLog> ExceptionLog { get; set; }
+    
+        public virtual ObjectResult<StudentProfile> StudentProfile_Sel(string id_operator, string id_value, string name_operator, string name_value, string coupon_operator, string coupon_value)
+        {
+            var id_operatorParameter = id_operator != null ?
+                new ObjectParameter("Id_operator", id_operator) :
+                new ObjectParameter("Id_operator", typeof(string));
+    
+            var id_valueParameter = id_value != null ?
+                new ObjectParameter("Id_value", id_value) :
+                new ObjectParameter("Id_value", typeof(string));
+    
+            var name_operatorParameter = name_operator != null ?
+                new ObjectParameter("Name_operator", name_operator) :
+                new ObjectParameter("Name_operator", typeof(string));
+    
+            var name_valueParameter = name_value != null ?
+                new ObjectParameter("Name_value", name_value) :
+                new ObjectParameter("Name_value", typeof(string));
+    
+            var coupon_operatorParameter = coupon_operator != null ?
+                new ObjectParameter("Coupon_operator", coupon_operator) :
+                new ObjectParameter("Coupon_operator", typeof(string));
+    
+            var coupon_valueParameter = coupon_value != null ?
+                new ObjectParameter("Coupon_value", coupon_value) :
+                new ObjectParameter("Coupon_value", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<StudentProfile>("StudentProfile_Sel", id_operatorParameter, id_valueParameter, name_operatorParameter, name_valueParameter, coupon_operatorParameter, coupon_valueParameter);
+        }
+    
+        public virtual ObjectResult<StudentProfile> StudentProfile_Sel(string id_operator, string id_value, string name_operator, string name_value, string coupon_operator, string coupon_value, MergeOption mergeOption)
+        {
+            var id_operatorParameter = id_operator != null ?
+                new ObjectParameter("Id_operator", id_operator) :
+                new ObjectParameter("Id_operator", typeof(string));
+    
+            var id_valueParameter = id_value != null ?
+                new ObjectParameter("Id_value", id_value) :
+                new ObjectParameter("Id_value", typeof(string));
+    
+            var name_operatorParameter = name_operator != null ?
+                new ObjectParameter("Name_operator", name_operator) :
+                new ObjectParameter("Name_operator", typeof(string));
+    
+            var name_valueParameter = name_value != null ?
+                new ObjectParameter("Name_value", name_value) :
+                new ObjectParameter("Name_value", typeof(string));
+    
+            var coupon_operatorParameter = coupon_operator != null ?
+                new ObjectParameter("Coupon_operator", coupon_operator) :
+                new ObjectParameter("Coupon_operator", typeof(string));
+    
+            var coupon_valueParameter = coupon_value != null ?
+                new ObjectParameter("Coupon_value", coupon_value) :
+                new ObjectParameter("Coupon_value", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<StudentProfile>("StudentProfile_Sel", mergeOption, id_operatorParameter, id_valueParameter, name_operatorParameter, name_valueParameter, coupon_operatorParameter, coupon_valueParameter);
+        }
     }
 }

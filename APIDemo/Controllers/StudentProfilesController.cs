@@ -48,12 +48,36 @@ namespace APIDemo.Controllers
             return Ok(ds);
         }
 
-        // GET: api/StudentProfiles/XXX
+        // GET: api/StudentProfiles/{Id}?Name={Name}&Gender={Gender}&Blood={Blood}&Height={Height}&Weight={Weight}&Coupon={Coupon}
         [ResponseType(typeof(StudentProfile))]
-        public IHttpActionResult GetStudentProfile(string Id)
+        public IHttpActionResult GetStudentProfile(string Id, string Name, string Gender, string Blood, string Height, string Weight, string Coupon)
         {
+            string errMsg = "";
+            //string[] array = new string[2];
+            string Id_operator = "";
+            string Id_value = "";
+            string Name_operator = "";
+            string Name_value = "";
+            string Coupon_operator = "";
+            string Coupon_value = "";
 
-            var ds = Id == "null" ? db.StudentProfile.Where(x => x.Id.Equals(null)) : db.StudentProfile.Where(x => x.Id == Id);
+            if (!parseSyntax(Id, Input_Type.String, ref Id_operator, ref Id_value, ref errMsg))
+            {
+                return BadRequest(errMsg);
+            }
+
+            if (!parseSyntax(Name, Input_Type.String, ref Name_operator, ref Name_value, ref errMsg))
+            {
+                return BadRequest(errMsg);
+            }
+
+            if (!parseSyntax(Coupon, Input_Type.String, ref Coupon_operator, ref Coupon_value, ref errMsg))
+            {
+                return BadRequest(errMsg);
+            }
+
+            var ds = db.StudentProfile_Sel(Id_operator, Id_value, Name_operator, Name_value, Coupon_operator, Coupon_value).ToList().AsQueryable();
+
             if (ds == null)
             {
                 return NotFound();
@@ -61,6 +85,96 @@ namespace APIDemo.Controllers
 
             string msg = getDbCountMsg(ref ds);
             return Ok(new { msg, ds });
+        }
+
+        private bool parseSyntax(string syntax, Input_Type input_Type, ref string xxx_operator, ref string xxx_value, ref string errMsg)
+        {
+            bool result = false;
+            string noNeed = "noNeed";
+
+            if (syntax != noNeed)
+            {
+                string[] array = syntax.Split('|');
+                if (array.Length > 2)
+                {
+                    errMsg = "invalid input! " + syntax;
+                    return result;
+                }
+
+                if (!checkOperator(array[0], input_Type))
+                {
+                    errMsg = "invalid operator: " + array[0];
+                    return result;
+                }
+                else
+                {
+                    array[0] = convertOperator(array[0]);
+                    if (input_Type == Input_Type.String && array[0] == Operator.like)
+                    {
+                        array[1] = array[1].Replace(Const.percentage, "%");
+                    }
+
+                    xxx_operator = array[0];
+                    xxx_value = array[1];
+                    result = true;
+                }
+            }
+            else
+            {
+                result = true;
+            }
+
+            return result;
+        }
+
+        private string convertOperator(string id_operator)
+        {
+            switch(id_operator)
+            {
+                case Operator.equal:
+                    id_operator = "=";
+                    break;
+                case Operator.moreThan:
+                    id_operator = ">";
+                    break;
+                case Operator.moreThanOrEqual:
+                    id_operator = ">=";
+                    break;
+                case Operator.lessThan:
+                    id_operator = "<";
+                    break;
+                case Operator.lessThanOrEqual:
+                    id_operator = "<=";
+                    break;
+            }
+
+            return id_operator;
+        }
+
+        private enum Input_Type
+        {
+            String,
+            Decimal
+        }
+
+        private bool checkOperator(string value, Input_Type input_Type)
+        {
+            switch (input_Type)
+            {
+                case Input_Type.String:
+                    if (value == Operator.equal || value == Operator.like)
+                    {
+                        return true;
+                    }
+                    break;
+                case Input_Type.Decimal:
+                    if (value == Operator.equal || value == Operator.moreThan || value == Operator.moreThanOrEqual || value == Operator.lessThan || value == Operator.lessThanOrEqual || value == Operator.between)
+                    {
+                        return true;
+                    }
+                    break;
+            }
+            return false;
         }
 
         // POST: api/StudentProfiles  新增一筆
@@ -367,23 +481,23 @@ namespace APIDemo.Controllers
 
         private void replaceStudentProfileNull(StudentProfile studentProfile)
         {
-            if (!string.IsNullOrEmpty(studentProfile.Id) && studentProfile.Id.ToLower() == "null")
+            if (!string.IsNullOrEmpty(studentProfile.Id) && studentProfile.Id.ToLower() == Const.Null)
             {
                 studentProfile.Id = null;
             }
-            if (!string.IsNullOrEmpty(studentProfile.Name) && studentProfile.Name.ToLower() == "null")
+            if (!string.IsNullOrEmpty(studentProfile.Name) && studentProfile.Name.ToLower() == Const.Null)
             {
                 studentProfile.Name = null;
             }
-            if (!string.IsNullOrEmpty(studentProfile.Gender) && studentProfile.Gender.ToLower() == "null")
+            if (!string.IsNullOrEmpty(studentProfile.Gender) && studentProfile.Gender.ToLower() == Const.Null)
             {
                 studentProfile.Gender = null;
             }
-            if (!string.IsNullOrEmpty(studentProfile.Blood) && studentProfile.Blood.ToLower() == "null")
+            if (!string.IsNullOrEmpty(studentProfile.Blood) && studentProfile.Blood.ToLower() == Const.Null)
             {
                 studentProfile.Blood = null;
             }
-            if (!string.IsNullOrEmpty(studentProfile.Coupon) && studentProfile.Coupon.ToLower() == "null")
+            if (!string.IsNullOrEmpty(studentProfile.Coupon) && studentProfile.Coupon.ToLower() == Const.Null)
             {
                 studentProfile.Coupon = null;
             }
