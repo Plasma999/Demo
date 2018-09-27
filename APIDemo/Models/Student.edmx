@@ -36,6 +36,12 @@
           <Parameter Name="Name_value" Type="varchar" Mode="In" />
           <Parameter Name="Coupon_operator" Type="varchar" Mode="In" />
           <Parameter Name="Coupon_value" Type="varchar" Mode="In" />
+          <Parameter Name="Height_operator" Type="varchar" Mode="In" />
+          <Parameter Name="Height_value" Type="decimal" Mode="In" />
+          <Parameter Name="Height_value2" Type="decimal" Mode="In" />
+          <Parameter Name="Weight_operator" Type="varchar" Mode="In" />
+          <Parameter Name="Weight_value" Type="decimal" Mode="In" />
+          <Parameter Name="Weight_value2" Type="decimal" Mode="In" />
         </Function>
         <EntityContainer Name="StudentModelStoreContainer">
           <EntitySet Name="ExceptionLog" EntityType="Self.ExceptionLog" Schema="dbo" store:Type="Tables" />
@@ -70,6 +76,12 @@
             <Parameter Name="Name_value" Mode="In" Type="String" />
             <Parameter Name="Coupon_operator" Mode="In" Type="String" />
             <Parameter Name="Coupon_value" Mode="In" Type="String" />
+            <Parameter Name="Height_operator" Mode="In" Type="String" />
+            <Parameter Name="Height_value" Mode="In" Type="Decimal" />
+            <Parameter Name="Height_value2" Mode="In" Type="Decimal" />
+            <Parameter Name="Weight_operator" Mode="In" Type="String" />
+            <Parameter Name="Weight_value" Mode="In" Type="Decimal" />
+            <Parameter Name="Weight_value2" Mode="In" Type="Decimal" />
           </FunctionImport>
         </EntityContainer>
         <EntityType Name="ExceptionLog">

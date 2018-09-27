@@ -23,6 +23,7 @@
         var height_syntax = '';
         var weight_syntax = '';
         var coupon_syntax = '';
+
         if ($('#select_Id').length > 0) {
             id_syntax = $('#select_Id').val() + '|' + $('#search_Id').val().replace(/%/g,'percentage');
         }
@@ -32,7 +33,13 @@
         if ($('#select_Coupon').length > 0) {
             coupon_syntax = $('#select_Coupon').val() + '|' + $('#search_Coupon').val().replace(/%/g, 'percentage');
         }
-        
+        if ($('#select_Height').length > 0) {
+            height_syntax = $('#select_Height').val() + '|' + ($('#select_Height').val() == 'between' ? $('#search_Height').val() + ',' + $('#search_Height2').val() : $('#search_Height').val());
+        }
+        if ($('#select_Weight').length > 0) {
+            weight_syntax = $('#select_Weight').val() + '|' + ($('#select_Weight').val() == 'between' ? $('#search_Weight').val() + ',' + $('#search_Weight2').val() : $('#search_Weight').val());
+        }
+
         get(id_syntax, name_syntax, gender_syntax, blood_syntax, height_syntax, weight_syntax, coupon_syntax);
     }
 

@@ -30,7 +30,7 @@ namespace APIDemo.Models
         public virtual DbSet<StudentProfile> StudentProfile { get; set; }
         public virtual DbSet<ExceptionLog> ExceptionLog { get; set; }
     
-        public virtual ObjectResult<StudentProfile> StudentProfile_Sel(string id_operator, string id_value, string name_operator, string name_value, string coupon_operator, string coupon_value)
+        public virtual ObjectResult<StudentProfile> StudentProfile_Sel(string id_operator, string id_value, string name_operator, string name_value, string coupon_operator, string coupon_value, string height_operator, Nullable<decimal> height_value, Nullable<decimal> height_value2, string weight_operator, Nullable<decimal> weight_value, Nullable<decimal> weight_value2)
         {
             var id_operatorParameter = id_operator != null ?
                 new ObjectParameter("Id_operator", id_operator) :
@@ -56,10 +56,34 @@ namespace APIDemo.Models
                 new ObjectParameter("Coupon_value", coupon_value) :
                 new ObjectParameter("Coupon_value", typeof(string));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<StudentProfile>("StudentProfile_Sel", id_operatorParameter, id_valueParameter, name_operatorParameter, name_valueParameter, coupon_operatorParameter, coupon_valueParameter);
+            var height_operatorParameter = height_operator != null ?
+                new ObjectParameter("Height_operator", height_operator) :
+                new ObjectParameter("Height_operator", typeof(string));
+    
+            var height_valueParameter = height_value.HasValue ?
+                new ObjectParameter("Height_value", height_value) :
+                new ObjectParameter("Height_value", typeof(decimal));
+    
+            var height_value2Parameter = height_value2.HasValue ?
+                new ObjectParameter("Height_value2", height_value2) :
+                new ObjectParameter("Height_value2", typeof(decimal));
+    
+            var weight_operatorParameter = weight_operator != null ?
+                new ObjectParameter("Weight_operator", weight_operator) :
+                new ObjectParameter("Weight_operator", typeof(string));
+    
+            var weight_valueParameter = weight_value.HasValue ?
+                new ObjectParameter("Weight_value", weight_value) :
+                new ObjectParameter("Weight_value", typeof(decimal));
+    
+            var weight_value2Parameter = weight_value2.HasValue ?
+                new ObjectParameter("Weight_value2", weight_value2) :
+                new ObjectParameter("Weight_value2", typeof(decimal));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<StudentProfile>("StudentProfile_Sel", id_operatorParameter, id_valueParameter, name_operatorParameter, name_valueParameter, coupon_operatorParameter, coupon_valueParameter, height_operatorParameter, height_valueParameter, height_value2Parameter, weight_operatorParameter, weight_valueParameter, weight_value2Parameter);
         }
     
-        public virtual ObjectResult<StudentProfile> StudentProfile_Sel(string id_operator, string id_value, string name_operator, string name_value, string coupon_operator, string coupon_value, MergeOption mergeOption)
+        public virtual ObjectResult<StudentProfile> StudentProfile_Sel(string id_operator, string id_value, string name_operator, string name_value, string coupon_operator, string coupon_value, string height_operator, Nullable<decimal> height_value, Nullable<decimal> height_value2, string weight_operator, Nullable<decimal> weight_value, Nullable<decimal> weight_value2, MergeOption mergeOption)
         {
             var id_operatorParameter = id_operator != null ?
                 new ObjectParameter("Id_operator", id_operator) :
@@ -85,7 +109,31 @@ namespace APIDemo.Models
                 new ObjectParameter("Coupon_value", coupon_value) :
                 new ObjectParameter("Coupon_value", typeof(string));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<StudentProfile>("StudentProfile_Sel", mergeOption, id_operatorParameter, id_valueParameter, name_operatorParameter, name_valueParameter, coupon_operatorParameter, coupon_valueParameter);
+            var height_operatorParameter = height_operator != null ?
+                new ObjectParameter("Height_operator", height_operator) :
+                new ObjectParameter("Height_operator", typeof(string));
+    
+            var height_valueParameter = height_value.HasValue ?
+                new ObjectParameter("Height_value", height_value) :
+                new ObjectParameter("Height_value", typeof(decimal));
+    
+            var height_value2Parameter = height_value2.HasValue ?
+                new ObjectParameter("Height_value2", height_value2) :
+                new ObjectParameter("Height_value2", typeof(decimal));
+    
+            var weight_operatorParameter = weight_operator != null ?
+                new ObjectParameter("Weight_operator", weight_operator) :
+                new ObjectParameter("Weight_operator", typeof(string));
+    
+            var weight_valueParameter = weight_value.HasValue ?
+                new ObjectParameter("Weight_value", weight_value) :
+                new ObjectParameter("Weight_value", typeof(decimal));
+    
+            var weight_value2Parameter = weight_value2.HasValue ?
+                new ObjectParameter("Weight_value2", weight_value2) :
+                new ObjectParameter("Weight_value2", typeof(decimal));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<StudentProfile>("StudentProfile_Sel", mergeOption, id_operatorParameter, id_valueParameter, name_operatorParameter, name_valueParameter, coupon_operatorParameter, coupon_valueParameter, height_operatorParameter, height_valueParameter, height_value2Parameter, weight_operatorParameter, weight_valueParameter, weight_value2Parameter);
         }
     }
 }

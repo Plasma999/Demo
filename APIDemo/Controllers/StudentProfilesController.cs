@@ -53,30 +53,42 @@ namespace APIDemo.Controllers
         public IHttpActionResult GetStudentProfile(string Id, string Name, string Gender, string Blood, string Height, string Weight, string Coupon)
         {
             string errMsg = "";
-            //string[] array = new string[2];
             string Id_operator = "";
             string Id_value = "";
             string Name_operator = "";
             string Name_value = "";
             string Coupon_operator = "";
             string Coupon_value = "";
+            string Height_operator = "";
+            decimal Height_value = 0;
+            decimal Height_value2 = 0;
+            string Weight_operator = "";
+            decimal Weight_value = 0;
+            decimal Weight_value2 = 0;
 
             if (!parseSyntax(Id, Input_Type.String, ref Id_operator, ref Id_value, ref errMsg))
             {
                 return BadRequest(errMsg);
             }
-
             if (!parseSyntax(Name, Input_Type.String, ref Name_operator, ref Name_value, ref errMsg))
             {
                 return BadRequest(errMsg);
             }
-
             if (!parseSyntax(Coupon, Input_Type.String, ref Coupon_operator, ref Coupon_value, ref errMsg))
             {
                 return BadRequest(errMsg);
             }
+            if (!parseSyntax(Height, Input_Type.Decimal, ref Height_operator, ref Height_value, ref Height_value2, ref errMsg))
+            {
+                return BadRequest(errMsg);
+            }
+            if (!parseSyntax(Weight, Input_Type.Decimal, ref Weight_operator, ref Weight_value, ref Weight_value2, ref errMsg))
+            {
+                return BadRequest(errMsg);
+            }
 
-            var ds = db.StudentProfile_Sel(Id_operator, Id_value, Name_operator, Name_value, Coupon_operator, Coupon_value).ToList().AsQueryable();
+            var ds = db.StudentProfile_Sel(Id_operator, Id_value, Name_operator, Name_value, Coupon_operator, Coupon_value, Height_operator, Height_value, Height_value2,
+                Weight_operator, Weight_value, Weight_value2).ToList().AsQueryable();
 
             if (ds == null)
             {
@@ -87,6 +99,33 @@ namespace APIDemo.Controllers
             return Ok(new { msg, ds });
         }
 
+        private bool parseSyntax(string syntax, Input_Type input_Type, ref string xxx_operator, ref decimal xxx_value, ref decimal xxx_value2, ref string errMsg)
+        {
+            string temp = "";
+            bool result = parseSyntax(syntax, input_Type, ref xxx_operator, ref temp, ref errMsg);
+
+            if (result)
+            {
+                if (input_Type == Input_Type.Decimal && xxx_operator == Operator.between)  //遇到between，要將原本的xxx.x,xxx.x，解析成兩個數值
+                {
+                    string[] decimalArray = temp.Split(',');
+                    if (decimalArray.Length != 2)
+                    {
+                        errMsg = "invalid decimal format! " + temp;
+                        return false;
+                    }
+                    xxx_value = decimal.Parse(decimalArray[0]);
+                    xxx_value2 = decimal.Parse(decimalArray[1]);
+                }
+                else if (!string.IsNullOrEmpty(temp))
+                {
+                    xxx_value = decimal.Parse(temp);
+                }
+            }
+
+            return result;
+        }
+
         private bool parseSyntax(string syntax, Input_Type input_Type, ref string xxx_operator, ref string xxx_value, ref string errMsg)
         {
             bool result = false;
@@ -95,7 +134,7 @@ namespace APIDemo.Controllers
             if (syntax != noNeed)
             {
                 string[] array = syntax.Split('|');
-                if (array.Length > 2)
+                if (array.Length != 2)
                 {
                     errMsg = "invalid input! " + syntax;
                     return result;
@@ -109,7 +148,7 @@ namespace APIDemo.Controllers
                 else
                 {
                     array[0] = convertOperator(array[0]);
-                    if (input_Type == Input_Type.String && array[0] == Operator.like)
+                    if (input_Type == Input_Type.String && array[0] == Operator.like)  //遇到like，要做%轉換
                     {
                         array[1] = array[1].Replace(Const.percentage, "%");
                     }

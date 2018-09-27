@@ -10,7 +10,8 @@
 namespace APIDemo.Models
 {
     using System;
-
+    using System.Collections.Generic;
+    
     public partial class StudentProfile
     {
         public System.Guid guid { get; set; }
