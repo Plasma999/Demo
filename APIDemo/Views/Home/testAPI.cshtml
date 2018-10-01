@@ -39,6 +39,20 @@
         if ($('#select_Weight').length > 0) {
             weight_syntax = $('#select_Weight').val() + '|' + ($('#select_Weight').val() == 'between' ? $('#search_Weight').val() + ',' + $('#search_Weight2').val() : $('#search_Weight').val());
         }
+        if ($('input[name=search_Gender]').length > 0) {
+            gender_syntax = 'equal|' + $('input[name=search_Gender]:checked').val();
+        }
+        if ($('input[name=search_Blood]').length > 0) {
+            var array = new Array();
+            $('input[name=search_Blood]:checked').each(function (i) {
+                array[i] = this.value;
+            })
+            if (array.length == 0) {
+                alert('please choose a blood!');
+                return;
+            }
+            blood_syntax = 'in|' + array.join();
+        }
 
         get(id_syntax, name_syntax, gender_syntax, blood_syntax, height_syntax, weight_syntax, coupon_syntax);
     }
@@ -302,14 +316,14 @@
                 '</select>';
             $('#div_filter').append('<div>' + removeIcon + ' ' + filter + ' ' + operator + ' <input type="text" id="search_' + filter + '" style="width: 60px;" maxlength="6" onkeydown="typeNumberOnly(event);" onblur="checkNumber(this);" /></div>');
         } else if (filter == 'Gender') {
-            operator = '&nbsp; Male <input type="radio" name="' + filter + '" value="M" /> &nbsp;' +
-                'Female <input type="radio" name="' + filter + '" value="F" />';
+            operator = '&nbsp; Male <input type="radio" name="search_' + filter + '" value="M" checked /> &nbsp;' +
+                'Female <input type="radio" name="search_' + filter + '" value="F" />';
             $('#div_filter').append('<div>' + removeIcon + ' ' + filter + ' ' + operator + '</div>');
         } else if (filter == 'Blood') {
-            operator = '&nbsp; A <input type="checkbox" name="' + filter + '" value="A" /> &nbsp;' +
-                'B <input type="checkbox" name="' + filter + '" value="B" /> &nbsp;' +
-                'AB <input type="checkbox" name="' + filter + '" value="AB" /> &nbsp;' +
-                'O <input type="checkbox" name="' + filter + '" value="O" />';
+            operator = '&nbsp; A <input type="checkbox" name="search_' + filter + '" value="A" /> &nbsp;' +
+                'B <input type="checkbox" name="search_' + filter + '" value="B" /> &nbsp;' +
+                'AB <input type="checkbox" name="search_' + filter + '" value="AB" /> &nbsp;' +
+                'O <input type="checkbox" name="search_' + filter + '" value="O" />';
             $('#div_filter').append('<div>' + removeIcon + ' ' + filter + ' ' + operator + '</div>');
         }
 

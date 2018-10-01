@@ -42,6 +42,8 @@
           <Parameter Name="Weight_operator" Type="varchar" Mode="In" />
           <Parameter Name="Weight_value" Type="decimal" Mode="In" />
           <Parameter Name="Weight_value2" Type="decimal" Mode="In" />
+          <Parameter Name="Gender_value" Type="varchar" Mode="In" />
+          <Parameter Name="Blood_value" Type="varchar" Mode="In" />
         </Function>
         <EntityContainer Name="StudentModelStoreContainer">
           <EntitySet Name="ExceptionLog" EntityType="Self.ExceptionLog" Schema="dbo" store:Type="Tables" />
@@ -82,6 +84,8 @@
             <Parameter Name="Weight_operator" Mode="In" Type="String" />
             <Parameter Name="Weight_value" Mode="In" Type="Decimal" />
             <Parameter Name="Weight_value2" Mode="In" Type="Decimal" />
+            <Parameter Name="Gender_value" Mode="In" Type="String" />
+            <Parameter Name="Blood_value" Mode="In" Type="String" />
           </FunctionImport>
         </EntityContainer>
         <EntityType Name="ExceptionLog">

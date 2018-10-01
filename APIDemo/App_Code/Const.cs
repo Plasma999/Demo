@@ -16,6 +16,7 @@ namespace APIDemo.App_Code
     {
         public const string equal = "equal";
         public const string like = "like";
+        public const string In = "in";
         public const string moreThan = "moreThan";
         public const string moreThanOrEqual = "moreThanOrEqual";
         public const string lessThan = "lessThan";

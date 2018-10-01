@@ -30,7 +30,7 @@ namespace APIDemo.Models
         public virtual DbSet<StudentProfile> StudentProfile { get; set; }
         public virtual DbSet<ExceptionLog> ExceptionLog { get; set; }
     
-        public virtual ObjectResult<StudentProfile> StudentProfile_Sel(string id_operator, string id_value, string name_operator, string name_value, string coupon_operator, string coupon_value, string height_operator, Nullable<decimal> height_value, Nullable<decimal> height_value2, string weight_operator, Nullable<decimal> weight_value, Nullable<decimal> weight_value2)
+        public virtual ObjectResult<StudentProfile> StudentProfile_Sel(string id_operator, string id_value, string name_operator, string name_value, string coupon_operator, string coupon_value, string height_operator, Nullable<decimal> height_value, Nullable<decimal> height_value2, string weight_operator, Nullable<decimal> weight_value, Nullable<decimal> weight_value2, string gender_value, string blood_value)
         {
             var id_operatorParameter = id_operator != null ?
                 new ObjectParameter("Id_operator", id_operator) :
@@ -80,10 +80,18 @@ namespace APIDemo.Models
                 new ObjectParameter("Weight_value2", weight_value2) :
                 new ObjectParameter("Weight_value2", typeof(decimal));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<StudentProfile>("StudentProfile_Sel", id_operatorParameter, id_valueParameter, name_operatorParameter, name_valueParameter, coupon_operatorParameter, coupon_valueParameter, height_operatorParameter, height_valueParameter, height_value2Parameter, weight_operatorParameter, weight_valueParameter, weight_value2Parameter);
+            var gender_valueParameter = gender_value != null ?
+                new ObjectParameter("Gender_value", gender_value) :
+                new ObjectParameter("Gender_value", typeof(string));
+    
+            var blood_valueParameter = blood_value != null ?
+                new ObjectParameter("Blood_value", blood_value) :
+                new ObjectParameter("Blood_value", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<StudentProfile>("StudentProfile_Sel", id_operatorParameter, id_valueParameter, name_operatorParameter, name_valueParameter, coupon_operatorParameter, coupon_valueParameter, height_operatorParameter, height_valueParameter, height_value2Parameter, weight_operatorParameter, weight_valueParameter, weight_value2Parameter, gender_valueParameter, blood_valueParameter);
         }
     
-        public virtual ObjectResult<StudentProfile> StudentProfile_Sel(string id_operator, string id_value, string name_operator, string name_value, string coupon_operator, string coupon_value, string height_operator, Nullable<decimal> height_value, Nullable<decimal> height_value2, string weight_operator, Nullable<decimal> weight_value, Nullable<decimal> weight_value2, MergeOption mergeOption)
+        public virtual ObjectResult<StudentProfile> StudentProfile_Sel(string id_operator, string id_value, string name_operator, string name_value, string coupon_operator, string coupon_value, string height_operator, Nullable<decimal> height_value, Nullable<decimal> height_value2, string weight_operator, Nullable<decimal> weight_value, Nullable<decimal> weight_value2, string gender_value, string blood_value, MergeOption mergeOption)
         {
             var id_operatorParameter = id_operator != null ?
                 new ObjectParameter("Id_operator", id_operator) :
@@ -133,7 +141,15 @@ namespace APIDemo.Models
                 new ObjectParameter("Weight_value2", weight_value2) :
                 new ObjectParameter("Weight_value2", typeof(decimal));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<StudentProfile>("StudentProfile_Sel", mergeOption, id_operatorParameter, id_valueParameter, name_operatorParameter, name_valueParameter, coupon_operatorParameter, coupon_valueParameter, height_operatorParameter, height_valueParameter, height_value2Parameter, weight_operatorParameter, weight_valueParameter, weight_value2Parameter);
+            var gender_valueParameter = gender_value != null ?
+                new ObjectParameter("Gender_value", gender_value) :
+                new ObjectParameter("Gender_value", typeof(string));
+    
+            var blood_valueParameter = blood_value != null ?
+                new ObjectParameter("Blood_value", blood_value) :
+                new ObjectParameter("Blood_value", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<StudentProfile>("StudentProfile_Sel", mergeOption, id_operatorParameter, id_valueParameter, name_operatorParameter, name_valueParameter, coupon_operatorParameter, coupon_valueParameter, height_operatorParameter, height_valueParameter, height_value2Parameter, weight_operatorParameter, weight_valueParameter, weight_value2Parameter, gender_valueParameter, blood_valueParameter);
         }
     }
 }

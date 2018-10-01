@@ -65,6 +65,10 @@ namespace APIDemo.Controllers
             string Weight_operator = "";
             decimal Weight_value = 0;
             decimal Weight_value2 = 0;
+            string Gender_operator = "";
+            string Gender_value = "";
+            string Blood_operator = "";
+            string Blood_value = "";
 
             if (!parseSyntax(Id, Input_Type.String, ref Id_operator, ref Id_value, ref errMsg))
             {
@@ -86,9 +90,17 @@ namespace APIDemo.Controllers
             {
                 return BadRequest(errMsg);
             }
+            if (!parseSyntax(Gender, Input_Type.String, ref Gender_operator, ref Gender_value, ref errMsg))
+            {
+                return BadRequest(errMsg);
+            }
+            if (!parseSyntax(Blood, Input_Type.String, ref Blood_operator, ref Blood_value, ref errMsg))
+            {
+                return BadRequest(errMsg);
+            }
 
             var ds = db.StudentProfile_Sel(Id_operator, Id_value, Name_operator, Name_value, Coupon_operator, Coupon_value, Height_operator, Height_value, Height_value2,
-                Weight_operator, Weight_value, Weight_value2).ToList().AsQueryable();
+                Weight_operator, Weight_value, Weight_value2, Gender_value, Blood_value).ToList().AsQueryable();
 
             if (ds == null)
             {
@@ -152,6 +164,10 @@ namespace APIDemo.Controllers
                     {
                         array[1] = array[1].Replace(Const.percentage, "%");
                     }
+                    if (input_Type == Input_Type.String && array[0] == Operator.In)  //遇到in，要變成xxx','xxx','xxx
+                    {
+                        array[1] = array[1].Replace(",", "','");
+                    }
 
                     xxx_operator = array[0];
                     xxx_value = array[1];
@@ -201,7 +217,7 @@ namespace APIDemo.Controllers
             switch (input_Type)
             {
                 case Input_Type.String:
-                    if (value == Operator.equal || value == Operator.like)
+                    if (value == Operator.equal || value == Operator.like || value == Operator.In)
                     {
                         return true;
                     }
