@@ -304,6 +304,7 @@ namespace APIDemo.App_Code
                 }
 
                 cmd = new SqlCommand(sql, sc);
+                cmd.CommandTimeout = 500;
                 SqlParameter pTVP = cmd.Parameters.Add("@" + typeName, SqlDbType.Structured);
                 pTVP.Value = dt;
                 pTVP.TypeName = typeName;
