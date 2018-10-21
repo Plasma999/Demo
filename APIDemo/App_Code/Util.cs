@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
+using System.Security.Cryptography;
+using System.Text;
 using System.Web.Configuration;
 
 namespace APIDemo.App_Code
@@ -125,6 +127,32 @@ namespace APIDemo.App_Code
             }
 
             return list;
+        }
+
+        /// <summary>
+        /// 取得MD5加密字串
+        /// </summary>
+        /// <param name="source">來源</param>
+        /// <returns>加密字串</returns>
+        public static string getMD5(string source)
+        {
+            byte[] original = Encoding.UTF8.GetBytes(source);  //將字串來源轉為byte[] 
+            MD5 s1 = MD5.Create();
+            byte[] change = s1.ComputeHash(original);
+            return BitConverter.ToString(change).Replace("-", "");  //將加密後的字串從byte[]轉回string
+        }
+
+        /// <summary>
+        /// 截斷字串的前N個字元
+        /// </summary>
+        /// <param name="str">原字串</param>
+        /// <param name="maxLength">最大長度</param>
+        /// <returns>截斷後的字串</returns>
+        public static string truncateString(string str, int maxLength)
+        {
+            if (string.IsNullOrEmpty(str))
+                return str;
+            return str.Substring(0, Math.Min(str.Length, maxLength));
         }
     }
 }

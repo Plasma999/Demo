@@ -283,14 +283,14 @@ namespace APIDemo.App_Code
 
         #region TVP(Table Value Parameter)
         /// <summary>
-        /// TVP insert資料
+        /// TVP處理(insert or update or delete資料)
         /// </summary>
         /// <param name="sql">sql語法</param>
         /// <param name="typeName">User-Defined Table Type的名稱</param>
         /// <param name="dt">資料表</param>
         /// <param name="connStr">連線字串</param>
         /// <returns>true: 成功, false: 失敗</returns>
-        public static bool TVP_insert(string sql, string typeName, DataTable dt, string connStr)
+        public static bool TVP_process(string sql, string typeName, DataTable dt, string connStr)
         {
             bool result = false;
             var sc = new SqlConnection(connStr);

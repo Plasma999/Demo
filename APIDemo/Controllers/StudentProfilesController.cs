@@ -48,6 +48,14 @@ namespace APIDemo.Controllers
             return Ok(ds);
         }
 
+        // GET api/StudentProfiles?Coupon={Coupon}
+        [ResponseType(typeof(StudentProfile))]
+        public IHttpActionResult GetStudentProfile(string Coupon)
+        {
+            int count = db.StudentProfile.Where(s => Coupon == Const.Null ? s.Coupon == null : s.Coupon == Coupon).Count();
+            return Ok(count);
+        }
+
         // GET: api/StudentProfiles/{Id}?Name={Name}&Gender={Gender}&Blood={Blood}&Height={Height}&Weight={Weight}&Coupon={Coupon}
         [ResponseType(typeof(StudentProfile))]
         public IHttpActionResult GetStudentProfile(string Id, string Name, string Gender, string Blood, string Height, string Weight, string Coupon)
@@ -456,9 +464,11 @@ namespace APIDemo.Controllers
                     dr["Name"] = studentProfileList[i].Name;
                     dr["Gender"] = studentProfileList[i].Gender;
                     dr["Blood"] = studentProfileList[i].Blood;
-                    dr["Height"] = studentProfileList[i].Height;
-                    dr["Weight"] = studentProfileList[i].Weight;
-                    dr["CreateDate"] = studentProfileList[i].CreateDate;
+                    dr["Height"] = studentProfileList[i].Height == null ? (object)DBNull.Value : studentProfileList[i].Height;
+                    dr["Weight"] = studentProfileList[i].Weight == null ? (object)DBNull.Value : studentProfileList[i].Weight;
+                    dr["Coupon"] = studentProfileList[i].Coupon;
+                    dr["CreateDate"] = studentProfileList[i].CreateDate == null ? (object)DBNull.Value : studentProfileList[i].CreateDate;
+                    dr["UpdateDate"] = studentProfileList[i].UpdateDate == null ? (object)DBNull.Value : studentProfileList[i].UpdateDate;
                     dt.Rows.Add(dr);
                 }
 
@@ -484,7 +494,7 @@ namespace APIDemo.Controllers
                 {
                     string typeName = "TVP_StudentProfile";
                     string sql = "insert into StudentProfile select * FROM @" + typeName;
-                    result = DbUtil.TVP_insert(sql, typeName, dt, connStr);
+                    result = DbUtil.TVP_process(sql, typeName, dt, connStr);
                 }
             }
             catch (Exception e)
@@ -558,14 +568,169 @@ namespace APIDemo.Controllers
             }
         }
 
-        //TODO PUT: api/StudentProfiles?num=N&type=XXX  更新N筆
-        /* 
-         * ADO.NET for
-         * EF db.Books.AddOrUpdate(book); //requires using System.Data.Entity.Migrations;
-         * SqlDataAdapter update
-         * TVP update
-         */
+        // PUT: api/StudentProfiles?num=N&type=XXX  更新N筆
+        [ResponseType(typeof(StudentProfile))]
+        public IHttpActionResult PutStudentProfile(int num, string type)
+        {
+            string result = "";
+            DateTime time_start = DateTime.Now;
 
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var studentProfileList = new List<StudentProfile>();
+
+            var ds = db.StudentProfile.Where(s => s.Coupon == null).OrderBy(s => s.CreateDate).Take(num).Select(s => new { s.guid, s.Id, s.Name }).ToList();
+
+            DateTime time_guid_done = DateTime.Now;
+            result += "get DB target costs " + Util.getSecond(time_start, time_guid_done) + " sec, ";
+
+            foreach (var column in ds)
+            {
+                var item = new StudentProfile();
+                item.guid = column.guid;
+                item.Coupon = Util.truncateString(Util.getMD5(column.Id + column.Name), 15);
+                item.UpdateDate = DateTime.Now;
+                studentProfileList.Add(item);
+            }
+
+            DateTime time_coupon_done = DateTime.Now;
+            result += "generate Coupon and put into List costs " + Util.getSecond(time_guid_done, time_coupon_done) + " sec, ";
+
+            bool db_result = false;
+            switch (type)
+            {
+                case "ADO_For":
+                    db_result = MassUpdate_ADO_For(studentProfileList);
+                    break;
+                case "EF_For":
+                    db_result = MassUpdate_EF_For(studentProfileList);
+                    break;
+                case "Z_EF_Ext":
+                    db_result = MassUpdate_Z_EF_Ext(studentProfileList);
+                    break;
+                case "TVP":
+                    db_result = MassUpdate_TVP(studentProfileList);
+                    break;
+                default:
+                    return BadRequest("invalid type: " + type);
+            }
+
+            if (!db_result)
+            {
+                result += "save DB has error, see detail in EventLog";
+                return Ok(new { result });
+            }
+
+            DateTime time_db_done = DateTime.Now;
+            result += "save to DB costs " + Util.getSecond(time_coupon_done, time_db_done) + " sec, ";
+
+            DateTime time_end = DateTime.Now;
+            result += "total costs " + Util.getSecond(time_start, time_end) + " sec.";
+
+            return Ok(new { result });
+        }
+
+        private bool MassUpdate_ADO_For(List<StudentProfile> studentProfileList)
+        {
+            bool result = false;
+            var sc = new SqlConnection();
+
+            try
+            {
+                sc = new SqlConnection(connStr);
+                string sql = @"update StudentProfile 
+                    set Coupon = {0}, UpdateDate = getdate()
+                    where guid = {1}";
+
+                foreach (var studentProfile in studentProfileList)
+                {
+                    string[] param = new string[] { studentProfile.Coupon, studentProfile.guid.ToString() };
+                    DbUtil.ExecuteSqlNoReturn(sql, param, sc);
+                }
+
+                result = true;
+            }
+            catch (Exception e)
+            {
+                EventLog.WriteEntry(Const.AP_ID, e.ToString(), EventLogEntryType.Error);
+            }
+            finally
+            {
+                sc.Dispose();
+            }
+
+            return result;
+        }
+
+        private bool MassUpdate_EF_For(List<StudentProfile> studentProfileList)
+        {
+            bool result = false;
+
+            try
+            {
+                foreach (var studentProfile in studentProfileList)
+                {
+                    var record = db.StudentProfile.Find(studentProfile.guid);
+                    record.Coupon = studentProfile.Coupon;
+                    record.UpdateDate = studentProfile.UpdateDate;
+                }
+
+                db.SaveChanges();
+                result = true;
+            }
+            catch (Exception e)
+            {
+                EventLog.WriteEntry(Const.AP_ID, e.ToString(), EventLogEntryType.Error);
+            }
+
+            return result;
+        }
+
+        private bool MassUpdate_Z_EF_Ext(List<StudentProfile> studentProfileList)
+        {
+            bool result = false;
+
+            try
+            {
+                db.BulkUpdate(studentProfileList, options => options.ColumnInputExpression = c => new { c.guid, c.Coupon, c.UpdateDate });
+                result = true;
+            }
+            catch (Exception e)
+            {
+                EventLog.WriteEntry(Const.AP_ID, e.ToString(), EventLogEntryType.Error);
+            }
+
+            return result;
+        }
+
+        private bool MassUpdate_TVP(List<StudentProfile> studentProfileList)
+        {
+            bool result = false;
+            string[] columnNames = new string[] { };
+            var dt = new DataTable();
+
+            try
+            {
+                if (setDataTable(studentProfileList, ref columnNames, ref dt))
+                {
+                    string typeName = "TVP_StudentProfile";
+                    string sql = @"update StudentProfile 
+                        set Coupon = t.Coupon, UpdateDate = getdate()
+                        from StudentProfile s
+                        join @" + typeName + " t on s.guid = t.guid";
+                    result = DbUtil.TVP_process(sql, typeName, dt, connStr);
+                }
+            }
+            catch (Exception e)
+            {
+                EventLog.WriteEntry(Const.AP_ID, e.ToString(), EventLogEntryType.Error);
+            }
+
+            return result;
+        }
 
         // DELETE: api/StudentProfiles?guid=XXX
         [ResponseType(typeof(StudentProfile))]

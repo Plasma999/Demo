@@ -15,9 +15,9 @@
                 return;
             }
 
-            var limit12 = 5000000;
-            if (num > limit12) {
-                if (!confirm('Data is more than ' + limit12 + '!\nIt will take a long time.\nAre you sure?')) {
+            var limit2 = 5000000;
+            if (num > limit2) {
+                if (!confirm('Data is more than ' + limit2 + '!\nIt will take a long time.\nAre you sure?')) {
                     return;
                 }
             }
@@ -29,8 +29,7 @@
                 dataType: 'json',
                 success: function (data) {
                     $.each(data, function (index, element) {
-                        var origin = $('#span_result').html();
-                        $('#span_result').html(origin + 'Data Number: ' + num + ', Method: ' + type + '<br/>' + element + '<br/>');
+                        $('#span_result').append('Data Number: ' + num + ', Method: ' + type + '<br/>' + element + '<br/>');
                     });
                 },
                 error: function (xhr, textStatus, errorThrown) {

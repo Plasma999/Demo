@@ -24,5 +24,12 @@ namespace APIDemo.Controllers
 
             return View();
         }
+
+        public ActionResult MassUpdate()
+        {
+            ViewBag.Title = "Mass Update";
+
+            return View();
+        }
     }
 }

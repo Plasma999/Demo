@@ -1,0 +1,132 @@
+﻿<html>
+<head>
+    <style type="text/css">
+        p {
+            padding-top: 10px;
+        }
+    </style>
+    <script type="text/javascript">
+        $(function () {
+            getNullCouponNum();
+        });
+
+        function getNullCouponNum() {
+            $('#loading').show();
+            $.ajax({
+                url: '../api/StudentProfiles?Coupon=null',
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    $('#span_coupon').text(data);
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    alert(errorThrown);
+                },
+                complete: function () {
+                    $('#loading').hide();
+                }
+            });
+        }
+
+        function massUpdate(type) {
+            var num = $('#testNum').val();
+            if (num <= 0) {
+                alert('update number must be more than 0');
+                return;
+            }
+
+            var limit = parseInt($('#span_coupon').text(), 10);
+            if (num > limit) {
+                alert('update number must be less than ' + limit);
+                return;
+            }
+
+            var limit1 = 10000;
+            if (num > limit1 && (type == 'EF_For')) {
+                alert('Data is more than ' + limit1 + '!\n' + type + ' is not good.\nChoose a better method please :)');
+                return;
+            }
+
+            var limit2 = 500000;
+            if (num > limit2 && (type == 'EF_For' || type == 'ADO_For')) {
+                alert('Data is more than ' + limit2 + '!\n' + type + ' is not good.\nChoose a better method please :)');
+                return;
+            }
+
+            var limit3 = 5000000;
+            if (num > limit3) {
+                if (!confirm('Data is more than ' + limit3 + '!\nIt will take a long time.\nAre you sure?')) {
+                    return;
+                }
+            }
+
+            $('#loading').show();
+            $.ajax({
+                url: '../api/StudentProfiles?num=' + num + '&type=' + type,
+                type: 'PUT',
+                dataType: 'json',
+                success: function (data) {
+                    $.each(data, function (index, element) {
+                        $('#span_result').append('Data Number: ' + num + ', Method: ' + type + '<br/>' + element + '<br/>');
+                    });
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    alert(errorThrown);
+                },
+                complete: function () {
+                    getNullCouponNum();
+                    $('#loading').hide();
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+    <section class="sections">
+        <div class="container txtWidth">
+            <div class="coloricon">
+                <div class="heading wow fadeIn animated" data-wow-offset="120" data-wow-duration="1.5s" style="visibility: visible; animation-duration: 1.5s; animation-name: fadeIn;">
+                    <div class="title text-center title-theme">
+                        <h1>Mass update StudentProfile coupon</h1>
+                    </div>
+                    <div class="separator"></div>
+                </div>
+                <div class="wow fadeInLeft" data-wow-offset="120" data-wow-duration="1.5s" style="visibility: visible; animation-duration: 1.5s; animation-name: fadeInLeft;">
+                    <div class="tab-content">
+                        <p>
+                            Coupon Rule:<br />
+                            Md5(Id + Name), then get first 15 char<br />
+                            ex: B136267448 + Henry Ayden Abdiel Werner -> 0398f29814dad14<br />
+                        </p>
+                        <p>
+                            Null Coupon Number:
+                            <span id="span_coupon"></span><br />
+                            Test Update Number:
+                            <input type="text" id="testNum" size="8" value="50000" />
+                        </p>
+                        <p>
+                            Method 1: ADO.NET for loop update data
+                            <input type="button" class="btn btn-defaultc2 btn-lg2" value="GO" onclick="massUpdate('ADO_For');" />
+                        </p>
+                        <p>
+                            Method 2: EntityFramework for loop update data
+                            <input type="button" class="btn btn-defaultc2 btn-lg2" value="GO" onclick="massUpdate('EF_For');" />
+                        </p>
+                        <p>
+                            Method 3: Z.EntityFramework.Extensions update data
+                            <input type="button" class="btn btn-defaultc2 btn-lg2" value="GO" onclick="massUpdate('Z_EF_Ext');" />
+                        </p>
+                        <p>
+                            Method 4: TVP(Table Value Parameter) update data
+                            <input type="button" class="btn btn-defaultc2 btn-lg2" value="GO" onclick="massUpdate('TVP');" />
+                        </p>
+                        <p>
+                            <span id="span_result" style="color:blue;font-size:14px;" />
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>
