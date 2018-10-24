@@ -45,6 +45,9 @@
           <Parameter Name="Gender_value" Type="varchar" Mode="In" />
           <Parameter Name="Blood_value" Type="varchar" Mode="In" />
         </Function>
+        <Function Name="StudentProfile_summary" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="columnName" Type="varchar" Mode="In" />
+        </Function>
         <EntityContainer Name="StudentModelStoreContainer">
           <EntitySet Name="ExceptionLog" EntityType="Self.ExceptionLog" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="StudentProfile" EntityType="Self.StudentProfile" Schema="dbo" store:Type="Tables" />
@@ -87,6 +90,9 @@
             <Parameter Name="Gender_value" Mode="In" Type="String" />
             <Parameter Name="Blood_value" Mode="In" Type="String" />
           </FunctionImport>
+          <FunctionImport Name="StudentProfile_summary" ReturnType="Collection(StudentModel.StudentProfile_summary_Result)">
+          <Parameter Name="columnName" Mode="In" Type="String" />
+          </FunctionImport>
         </EntityContainer>
         <EntityType Name="ExceptionLog">
           <Key>
@@ -97,6 +103,10 @@
           <Property Name="Create_Time" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="ErrorMsg" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
+        <ComplexType Name="StudentProfile_summary_Result">
+          <Property Type="String" Name="label" Nullable="true" MaxLength="2" />
+          <Property Type="Int32" Name="data" Nullable="true" />
+        </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -130,6 +140,14 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <FunctionImportMapping FunctionImportName="StudentProfile_Sel" FunctionName="StudentModel.Store.StudentProfile_Sel" />
+          <FunctionImportMapping FunctionImportName="StudentProfile_summary" FunctionName="StudentModel.Store.StudentProfile_summary">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="StudentModel.StudentProfile_summary_Result">
+                <ScalarProperty Name="label" ColumnName="label" />
+                <ScalarProperty Name="data" ColumnName="data" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

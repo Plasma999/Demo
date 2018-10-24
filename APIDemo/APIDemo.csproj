@@ -233,6 +233,9 @@
     <Compile Include="Models\StudentProfile.cs">
       <DependentUpon>Student.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\StudentProfile_summary_Result.cs">
+      <DependentUpon>Student.tt</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -322,6 +325,8 @@
     <Content Include="Scripts\DataTables-1.10.18\js\dataTables.semanticui.min.js" />
     <Content Include="Scripts\DataTables-1.10.18\js\jquery.dataTables.min.js" />
     <Content Include="Scripts\datatables.min.js" />
+    <Content Include="Scripts\flot-0.8.3\jquery.flot.min.js" />
+    <Content Include="Scripts\flot-0.8.3\jquery.flot.pie.min.js" />
     <Content Include="Scripts\jQuery-3.3.1\jquery-3.3.1.js" />
     <Content Include="Scripts\jQuery-3.3.1\jquery-3.3.1.min.js" />
     <Content Include="Scripts\jQuery-3.3.1\jquery-3.3.1.slim.js" />
@@ -349,6 +354,7 @@
     <Content Include="Views\Home\testAPI.cshtml" />
     <Content Include="Views\Home\MassInsert.cshtml" />
     <Content Include="Views\Home\MassUpdate.cshtml" />
+    <Content Include="Views\Home\PieChart.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

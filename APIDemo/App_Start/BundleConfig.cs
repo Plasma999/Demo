@@ -16,7 +16,9 @@ namespace APIDemo
                         "~/Scripts/DataTables-1.10.18/js/dataTables.bootstrap4.min.js",
                         "~/Scripts/DataTables-1.10.18/js/dataTables.foundation.min.js",
                         "~/Scripts/DataTables-1.10.18/js/dataTables.jqueryui.min.js",
-                        "~/Scripts/DataTables-1.10.18/js/dataTables.semanticui.min.js"));
+                        "~/Scripts/DataTables-1.10.18/js/dataTables.semanticui.min.js",
+                        "~/Scripts/flot-0.8.3/jquery.flot.min.js",
+                        "~/Scripts/flot-0.8.3/jquery.flot.pie.min.js"));
 
             // Use the development version of Modernizr to develop with and learn from. Then, when you're
             // ready for production, use the build tool at https://modernizr.com to pick only the tests you need.

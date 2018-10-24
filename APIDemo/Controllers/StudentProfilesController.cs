@@ -56,6 +56,14 @@ namespace APIDemo.Controllers
             return Ok(count);
         }
 
+        // GET api/StudentProfiles?columnName={columnName}
+        [ResponseType(typeof(StudentProfile))]
+        public IHttpActionResult GetStudentProfileSummary(string columnName)
+        {
+            var ds = db.StudentProfile_summary(columnName).ToList().AsQueryable();
+            return Ok(ds);
+        }
+
         // GET: api/StudentProfiles/{Id}?Name={Name}&Gender={Gender}&Blood={Blood}&Height={Height}&Weight={Weight}&Coupon={Coupon}
         [ResponseType(typeof(StudentProfile))]
         public IHttpActionResult GetStudentProfile(string Id, string Name, string Gender, string Blood, string Height, string Weight, string Coupon)

@@ -151,5 +151,14 @@ namespace APIDemo.Models
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<StudentProfile>("StudentProfile_Sel", mergeOption, id_operatorParameter, id_valueParameter, name_operatorParameter, name_valueParameter, coupon_operatorParameter, coupon_valueParameter, height_operatorParameter, height_valueParameter, height_value2Parameter, weight_operatorParameter, weight_valueParameter, weight_value2Parameter, gender_valueParameter, blood_valueParameter);
         }
+    
+        public virtual ObjectResult<StudentProfile_summary_Result> StudentProfile_summary(string columnName)
+        {
+            var columnNameParameter = columnName != null ?
+                new ObjectParameter("columnName", columnName) :
+                new ObjectParameter("columnName", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<StudentProfile_summary_Result>("StudentProfile_summary", columnNameParameter);
+        }
     }
 }

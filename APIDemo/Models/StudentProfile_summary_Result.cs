@@ -9,11 +9,11 @@
 
 namespace APIDemo.Models
 {
-    public partial class ExceptionLog
+    using System;
+    
+    public partial class StudentProfile_summary_Result
     {
-        public string AP_ID { get; set; }
-        public string Function_Name { get; set; }
-        public System.DateTime Create_Time { get; set; }
-        public string ErrorMsg { get; set; }
+        public string label { get; set; }
+        public Nullable<int> data { get; set; }
     }
 }

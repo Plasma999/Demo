@@ -31,5 +31,12 @@ namespace APIDemo.Controllers
 
             return View();
         }
+
+        public ActionResult PieChart()
+        {
+            ViewBag.Title = "Pie Chart";
+
+            return View();
+        }
     }
 }

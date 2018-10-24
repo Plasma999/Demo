@@ -1,0 +1,99 @@
+﻿<html>
+<head>
+    <style type="text/css">
+        p {
+            padding-top: 10px;
+        }
+    </style>
+    <script type="text/javascript">
+        $(function () {
+            var api = '../api/StudentProfiles?columnName=';
+            showPlot(api + 'Gender', 'Gender_Plot');
+            $('#Gender_Plot').showMemo('Gender_Memo');
+            showPlot(api + 'Blood', 'Blood_Plot');
+            $('#Blood_Plot').showMemo('Blood_Memo');
+            showPlot(api + 'BMI', 'BMI_Plot');
+            $('#BMI_Plot').showMemo('BMI_Memo');
+        });
+
+        $.fn.showMemo = function (id) {
+            $(this).bind("plothover", function (event, pos, item) {
+                if (!item) { return; }
+
+                var html = [];
+                var percent = parseFloat(item.series.percent).toFixed(2);
+
+                html.push("<div style=\"border:1px solid grey;background-color:",
+                    item.series.color,
+                    "\">",
+                    "<span style=\"color:white\">",
+                    item.series.label,
+                    ": ",
+                    item.series.data[0][1],
+                    " (", percent, "%)",
+                    "</span>",
+                    "</div>");
+                $("#" + id).html(html.join(''));
+            });
+        }
+
+        function showPlot(api, id) {
+            var options = {
+                series: {
+                    pie: {
+                        show: true,
+                        label: {
+                            show: true,
+                            formatter: function (label, series) {
+                                return '<div style="border:1px solid grey;font-size:8pt;text-align:center;padding:5px;color:white;">' +
+                                    label + '<br />' + Math.round(series.percent * 100) / 100 +
+                                    '%</div>';
+                            },
+                            background: {
+                                opacity: 0.7,
+                                color: '#000'
+                            }
+                        }
+                    }
+                },
+                legend: { show: false },
+                grid: { hoverable: true }
+            };
+
+            $.getJSON(api, function (data) {
+                $.plot($('#' + id), data, options);
+            }).fail(function (jqXHR, textStatus, errorThrown) {
+                alert(jqXHR.responseJSON.Message);
+            });
+        }
+    </script>
+</head>
+<body>
+    
+    <section class="sections">
+        <div class="container txtWidth">
+            <div class="coloricon">
+                <div class="heading wow fadeIn animated" data-wow-offset="120" data-wow-duration="1.5s" style="visibility: visible; animation-duration: 1.5s; animation-name: fadeIn;">
+                    <div class="title text-center title-theme">
+                        <h1>StudentProfile Pie Chart</h1>
+                    </div>
+                    <div class="separator"></div>
+                </div>
+                <div class="wow fadeInLeft" data-wow-offset="120" data-wow-duration="1.5s" style="visibility: visible; animation-duration: 1.5s; animation-name: fadeInLeft;">
+                    <div class="tab-content">
+                        <p>Gender</p>
+                        <div id="Gender_Plot" style="width:500px; height:400px;"></div>
+                        <div id="Gender_Memo" style="text-align:center; height:30px; width:250px; height:20px; text-align:center; margin:0 auto;"></div>
+                        <p>Blood</p>
+                        <div id="Blood_Plot" style="width:500px; height:400px;"></div>
+                        <div id="Blood_Memo" style="text-align:center; height:30px; width:250px; height:20px; text-align:center; margin:0 auto;"></div>
+                        <p>BMI</p>
+                        <div id="BMI_Plot" style="width:500px; height:400px;"></div>
+                        <div id="BMI_Memo" style="text-align:center; height:30px; width:250px; height:20px; text-align:center; margin:0 auto;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>
