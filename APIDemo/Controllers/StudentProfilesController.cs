@@ -357,6 +357,22 @@ namespace APIDemo.Controllers
                     return BadRequest("invalid type: " + type);
             }
 
+            randomIDs.Clear();
+            randomIDs.TrimExcess();
+            randomNames.Clear();
+            randomNames.TrimExcess();
+            randomGenders.Clear();
+            randomGenders.TrimExcess();
+            randomBloods.Clear();
+            randomBloods.TrimExcess();
+            randomHeights.Clear();
+            randomHeights.TrimExcess();
+            randomWeights.Clear();
+            randomWeights.TrimExcess();
+            studentProfileList.Clear();
+            studentProfileList.TrimExcess();
+            GC.Collect();
+
             if (!db_result)
             {
                 result += "save DB has error, see detail in EventLog";
@@ -625,6 +641,12 @@ namespace APIDemo.Controllers
                 default:
                     return BadRequest("invalid type: " + type);
             }
+
+            ds.Clear();
+            ds.TrimExcess();
+            studentProfileList.Clear();
+            studentProfileList.TrimExcess();
+            GC.Collect();
 
             if (!db_result)
             {
