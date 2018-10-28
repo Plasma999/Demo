@@ -335,6 +335,20 @@ namespace APIDemo.Controllers
                 studentProfileList.Add(item);
             }
 
+            randomIDs.Clear();
+            randomIDs.TrimExcess();
+            randomNames.Clear();
+            randomNames.TrimExcess();
+            randomGenders.Clear();
+            randomGenders.TrimExcess();
+            randomBloods.Clear();
+            randomBloods.TrimExcess();
+            randomHeights.Clear();
+            randomHeights.TrimExcess();
+            randomWeights.Clear();
+            randomWeights.TrimExcess();
+            GC.Collect();
+
             DateTime time_list_done = DateTime.Now;
             result += "put into List costs " + Util.getSecond(time_other_done, time_list_done) + " sec, ";
 
@@ -357,18 +371,6 @@ namespace APIDemo.Controllers
                     return BadRequest("invalid type: " + type);
             }
 
-            randomIDs.Clear();
-            randomIDs.TrimExcess();
-            randomNames.Clear();
-            randomNames.TrimExcess();
-            randomGenders.Clear();
-            randomGenders.TrimExcess();
-            randomBloods.Clear();
-            randomBloods.TrimExcess();
-            randomHeights.Clear();
-            randomHeights.TrimExcess();
-            randomWeights.Clear();
-            randomWeights.TrimExcess();
             studentProfileList.Clear();
             studentProfileList.TrimExcess();
             GC.Collect();
@@ -446,9 +448,13 @@ namespace APIDemo.Controllers
 
             try
             {
-                if (setDataTable(studentProfileList, ref columnNames, ref dt))
+                var splitList = Util.splitList(studentProfileList, DbUtil.maxRowSize);
+                foreach (var list in splitList)
                 {
-                    result = DbUtil.MySqlBulkCopy("StudentProfile", columnNames, dt, connStr);
+                    if (setDataTable(list, ref columnNames, ref dt))
+                    {
+                        result = DbUtil.MySqlBulkCopy("StudentProfile", columnNames, dt, connStr);
+                    }
                 }
             }
             catch (Exception e)
@@ -468,16 +474,8 @@ namespace APIDemo.Controllers
                 //欄位名稱與型態
                 columnNames = new string[] { "guid", "Id", "Name", "Gender", "Blood", "Height", "Weight", "Coupon", "CreateDate", "UpdateDate" };
                 Type[] columnTypes = new Type[] { typeof(Guid), typeof(string), typeof(string), typeof(string), typeof(string), typeof(decimal), typeof(decimal), typeof(string), typeof(DateTime), typeof(DateTime) };
-                if (columnNames.Length != columnTypes.Length)
-                {
-                    throw new ArgumentException("columnNames and columnTypes are not mapping.");
-                }
 
-                //DataTable的欄位
-                for (int i = 0; i < columnNames.Length; i++)
-                {
-                    dt.Columns.Add(columnNames[i], columnTypes[i]);
-                }
+                dt = DbUtil.setDataColumn(columnNames, columnTypes);
 
                 //DataTable的資料列
                 for (int i = 0; i < studentProfileList.Count; i++)
@@ -514,11 +512,15 @@ namespace APIDemo.Controllers
 
             try
             {
-                if (setDataTable(studentProfileList, ref columnNames, ref dt))
+                var splitList = Util.splitList(studentProfileList, DbUtil.maxRowSize);
+                foreach (var list in splitList)
                 {
-                    string typeName = "TVP_StudentProfile";
-                    string sql = "insert into StudentProfile select * FROM @" + typeName;
-                    result = DbUtil.TVP_process(sql, typeName, dt, connStr);
+                    if (setDataTable(list, ref columnNames, ref dt))
+                    {
+                        string typeName = "TVP_StudentProfile";
+                        string sql = "insert into StudentProfile select * FROM @" + typeName;
+                        result = DbUtil.TVP_process(sql, typeName, dt, connStr);
+                    }
                 }
             }
             catch (Exception e)
@@ -744,14 +746,18 @@ namespace APIDemo.Controllers
 
             try
             {
-                if (setDataTable(studentProfileList, ref columnNames, ref dt))
+                var splitList = Util.splitList(studentProfileList, DbUtil.maxRowSize);
+                foreach (var list in splitList)
                 {
-                    string typeName = "TVP_StudentProfile";
-                    string sql = @"update StudentProfile 
+                    if (setDataTable(list, ref columnNames, ref dt))
+                    {
+                        string typeName = "TVP_StudentProfile";
+                        string sql = @"update StudentProfile 
                         set Coupon = t.Coupon, UpdateDate = getdate()
                         from StudentProfile s
                         join @" + typeName + " t on s.guid = t.guid";
-                    result = DbUtil.TVP_process(sql, typeName, dt, connStr);
+                        result = DbUtil.TVP_process(sql, typeName, dt, connStr);
+                    }
                 }
             }
             catch (Exception e)

@@ -154,5 +154,20 @@ namespace APIDemo.App_Code
                 return str;
             return str.Substring(0, Math.Min(str.Length, maxLength));
         }
+
+        /// <summary>
+        /// 切割List
+        /// </summary>
+        /// <typeparam name="T">泛型</typeparam>
+        /// <param name="origin">來源List</param>
+        /// <param name="size">切割大小</param>
+        /// <returns>切割後的List</returns>
+        public static IEnumerable<List<T>> splitList<T>(List<T> origin, int size)
+        {
+            for (int i = 0; i < origin.Count; i += size)
+            {
+                yield return origin.GetRange(i, Math.Min(size, origin.Count - i));
+            }
+        }
     }
 }

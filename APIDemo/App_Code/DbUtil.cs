@@ -12,6 +12,8 @@ namespace APIDemo.App_Code
     /// </summary>
     internal class DbUtil
     {
+        public const int maxRowSize = 4194304;  //iisexpress.exe若為32bit，DataTable記憶體使用最大不能超過2GB
+
         #region ADO.NET
         /// <summary>
         /// 取得參數名稱
@@ -280,6 +282,30 @@ namespace APIDemo.App_Code
             return result;
         }
         #endregion
+
+        /// <summary>
+        /// 設定DataTable的欄位
+        /// </summary>
+        /// <param name="columnNames">欄位名稱</param>
+        /// <param name="columnTypes">欄位型態</param>
+        /// <returns>DataTable</returns>
+        public static DataTable setDataColumn(string[] columnNames, Type[] columnTypes)
+        {
+            if (columnNames.Length != columnTypes.Length)
+            {
+                throw new ArgumentException("columnNames and columnTypes are not mapping.");
+            }
+
+            var dt = new DataTable();
+
+            //DataTable的欄位
+            for (int i = 0; i < columnNames.Length; i++)
+            {
+                dt.Columns.Add(columnNames[i], columnTypes[i]);
+            }
+
+            return dt;
+        }
 
         #region TVP(Table Value Parameter)
         /// <summary>
