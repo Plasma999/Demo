@@ -56,7 +56,7 @@
                     <div class="tab-content">
                         <p>
                             Test Data Number:
-                            <input type="text" id="testNum" size="8" value="50000" />
+                            <input type="text" id="testNum" size="8" maxlength="7" value="50000" onkeydown="typeNumberOnly(event);" onblur="checkNumber(this);" />
                         </p>
                         <p>
                             Method 1: ADO.NET for loop insert data

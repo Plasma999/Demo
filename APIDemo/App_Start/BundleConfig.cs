@@ -11,6 +11,7 @@ namespace APIDemo
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
                         "~/Scripts/jQuery-3.3.1/jquery-3.3.1.min.js",
                         "~/Scripts/jquery-extend.js",
+                        "~/Scripts/share.js",
                         "~/Scripts/DataTables-1.10.18/js/jquery.dataTables.min.js",
                         "~/Scripts/DataTables-1.10.18/js/dataTables.bootstrap.min.js",
                         "~/Scripts/DataTables-1.10.18/js/dataTables.bootstrap4.min.js",
