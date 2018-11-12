@@ -169,5 +169,40 @@ namespace APIDemo.App_Code
                 yield return origin.GetRange(i, Math.Min(size, origin.Count - i));
             }
         }
+
+        /// <summary>
+        /// 檢查是否大於0
+        /// </summary>
+        /// <param name="d">數字</param>
+        /// <returns>true: 是, false: 否</returns>
+        public static bool checkMoreThanZero(decimal? d)
+        {
+            if (d != null && d > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// 是否為英文字元
+        /// </summary>
+        /// <param name="c">字元</param>
+        /// <returns>true: 是, false: 否</returns>
+        public static bool isEnglishChar(char c)
+        {
+            int i = c;
+            if ((i > 64 && i < 91) || (i > 96 && i < 123))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 }

@@ -265,6 +265,18 @@ namespace APIDemo.Controllers
             {
                 studentProfile.Weight = 0;
             }
+            if (studentProfile.Id != null)
+            {
+                studentProfile.Id = studentProfile.Id.ToUpper();
+            }
+
+            string errMsg = "";
+            var studentProfileValidator = new StudentProfileValidator(studentProfile);
+            if (!studentProfileValidator.ValidateAll(ref errMsg))
+            {
+                return BadRequest(errMsg);
+            }
+
             studentProfile.CreateDate = DateTime.Now;
             db.StudentProfile.Add(studentProfile);
 
