@@ -38,5 +38,12 @@ namespace APIDemo.Controllers
 
             return View();
         }
+
+        public ActionResult Exam()
+        {
+            ViewBag.Title = "Exam";
+
+            return View();
+        }
     }
 }

@@ -204,5 +204,49 @@ namespace APIDemo.App_Code
                 return false;
             }
         }
+
+        /// <summary>
+        /// 字串反轉(Array.Reverse)
+        /// </summary>
+        /// <param name="s">字串</param>
+        /// <returns>反轉後的字串</returns>
+        public static string ReverseByArray(string s)
+        {
+            char[] charArray = s.ToCharArray();
+            Array.Reverse(charArray);
+            return new string(charArray);
+        }
+
+        /// <summary>
+        /// 字串反轉(StringBuilder)
+        /// </summary>
+        /// <param name="s">字串</param>
+        /// <returns>反轉後的字串</returns>
+        public static string ReverseByStringBuilder(string s)
+        {
+            var sb = new StringBuilder();
+            for (var i = s.Length - 1; i >= 0; i--)
+            {
+                sb.Append(s[i]);
+            }
+            return sb.ToString();
+        }
+
+        /// <summary>
+        /// 字串反轉(CharBuffer)
+        /// </summary>
+        /// <param name="s">字串</param>
+        /// <returns>反轉後的字串</returns>
+        public static string ReverseByCharBuffer(string s)
+        {
+            char[] c = s.ToCharArray();
+            for (int i = 0; i < s.Length / 2; i++)
+            {
+                char t = s[i];
+                c[i] = s[s.Length - i - 1];
+                c[s.Length - i - 1] = t;
+            }
+            return new string(c);
+        }
     }
 }

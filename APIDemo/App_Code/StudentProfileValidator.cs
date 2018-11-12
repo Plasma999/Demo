@@ -69,19 +69,9 @@ namespace APIDemo.App_Code
             {
                 ErrMsg = "Id cant be empty or whitespace!";
             }
-            else
+            else if (IsForeigner() || IsValidId())
             {
-                if (IsForeigner())
-                {
-                    result = true;
-                }
-                else
-                {
-                    if (IsValidId())
-                    {
-                        result = true;
-                    }
-                }
+                result = true;
             }
 
             return result;
