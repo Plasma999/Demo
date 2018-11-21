@@ -11,16 +11,4 @@ namespace APIDemo.App_Code
         public static readonly List<string> Gender = new List<string> { "M", "F" };
         public static readonly List<string> Blood = new List<string> { "A", "B", "AB", "O" };
     }
-
-    internal class Operator
-    {
-        public const string equal = "equal";
-        public const string like = "like";
-        public const string In = "in";
-        public const string moreThan = "moreThan";
-        public const string moreThanOrEqual = "moreThanOrEqual";
-        public const string lessThan = "lessThan";
-        public const string lessThanOrEqual = "lessThanOrEqual";
-        public const string between = "between";
-    }
 }

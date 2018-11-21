@@ -188,6 +188,7 @@
     <Compile Include="App_Code\Const.cs" />
     <Compile Include="App_Code\DbUtil.cs" />
     <Compile Include="App_Code\IValidator.cs" />
+    <Compile Include="App_Code\Operator.cs" />
     <Compile Include="App_Code\RandomID.cs" />
     <Compile Include="App_Code\StudentProfileValidator.cs" />
     <Compile Include="App_Code\Util.cs" />

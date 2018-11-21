@@ -134,7 +134,7 @@ namespace APIDemo.Controllers
 
             if (result)
             {
-                if (input_Type == Input_Type.Decimal && xxx_operator == Operator.between)  //遇到between，要將原本的xxx.x,xxx.x，解析成兩個數值
+                if (input_Type == Input_Type.Decimal && xxx_operator == new Operator_between().Name)  //遇到between，要將原本的xxx.x,xxx.x，解析成兩個數值
                 {
                     string[] decimalArray = temp.Split(',');
                     if (decimalArray.Length != 2)
@@ -176,11 +176,11 @@ namespace APIDemo.Controllers
                 else
                 {
                     array[0] = convertOperator(array[0]);
-                    if (input_Type == Input_Type.String && array[0] == Operator.like)  //遇到like，要做%轉換
+                    if (input_Type == Input_Type.String && array[0] == new Operator_like().Name)  //遇到like，要做%轉換
                     {
                         array[1] = array[1].Replace(Const.percentage, "%");
                     }
-                    if (input_Type == Input_Type.String && array[0] == Operator.In)  //遇到in，要變成xxx','xxx','xxx
+                    if (input_Type == Input_Type.String && array[0] == new Operator_in().Name)  //遇到in，要變成xxx','xxx','xxx
                     {
                         array[1] = array[1].Replace(",", "','");
                     }
@@ -200,23 +200,22 @@ namespace APIDemo.Controllers
 
         private string convertOperator(string id_operator)
         {
-            switch(id_operator)
+            var operators = new List<Operator>();
+            operators.Add(new Operator_equal());
+            operators.Add(new Operator_like());
+            operators.Add(new Operator_in());
+            operators.Add(new Operator_moreThan());
+            operators.Add(new Operator_moreThanOrEqual());
+            operators.Add(new Operator_lessThan());
+            operators.Add(new Operator_lessThanOrEqual());
+            operators.Add(new Operator_between());
+
+            foreach (var o in operators)
             {
-                case Operator.equal:
-                    id_operator = "=";
-                    break;
-                case Operator.moreThan:
-                    id_operator = ">";
-                    break;
-                case Operator.moreThanOrEqual:
-                    id_operator = ">=";
-                    break;
-                case Operator.lessThan:
-                    id_operator = "<";
-                    break;
-                case Operator.lessThanOrEqual:
-                    id_operator = "<=";
-                    break;
+                if (id_operator == o.Name)
+                {
+                    return o.Value;
+                }
             }
 
             return id_operator;
@@ -230,21 +229,33 @@ namespace APIDemo.Controllers
 
         private bool checkOperator(string value, Input_Type input_Type)
         {
+            var operators = new List<Operator>();
+
             switch (input_Type)
             {
                 case Input_Type.String:
-                    if (value == Operator.equal || value == Operator.like || value == Operator.In)
-                    {
-                        return true;
-                    }
+                    operators.Add(new Operator_equal());
+                    operators.Add(new Operator_like());
+                    operators.Add(new Operator_in());
                     break;
                 case Input_Type.Decimal:
-                    if (value == Operator.equal || value == Operator.moreThan || value == Operator.moreThanOrEqual || value == Operator.lessThan || value == Operator.lessThanOrEqual || value == Operator.between)
-                    {
-                        return true;
-                    }
+                    operators.Add(new Operator_equal());
+                    operators.Add(new Operator_moreThan());
+                    operators.Add(new Operator_moreThanOrEqual());
+                    operators.Add(new Operator_lessThan());
+                    operators.Add(new Operator_lessThanOrEqual());
+                    operators.Add(new Operator_between());
                     break;
             }
+
+            foreach (var o in operators)
+            {
+                if (value == o.Name)
+                {
+                    return true;
+                }
+            }
+
             return false;
         }
 
