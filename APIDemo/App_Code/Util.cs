@@ -249,4 +249,31 @@ namespace APIDemo.App_Code
             return new string(c);
         }
     }
+
+    public static class StringExtension
+    {
+        /// <summary>
+        /// 安全版ToLower()
+        /// </summary>
+        /// <param name="s">字串</param>
+        /// <returns>字串的小寫</returns>
+        public static string NullSafeToLower(this string s)
+        {
+            if (s == null)
+            {
+                s = string.Empty;
+            }
+            return s.ToLower();
+        }
+
+        /// <summary>
+        /// 取代字串null為程式中的null
+        /// </summary>
+        /// <param name="s">字串</param>
+        /// <returns>取代後的字串</returns>
+        public static string ReplaceNull(this string s)
+        {
+            return Const.Null.Equals(s, StringComparison.CurrentCultureIgnoreCase) ? null : s;
+        }
+    }
 }

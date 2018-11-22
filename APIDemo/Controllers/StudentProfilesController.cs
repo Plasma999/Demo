@@ -52,7 +52,8 @@ namespace APIDemo.Controllers
         [ResponseType(typeof(StudentProfile))]
         public IHttpActionResult GetStudentProfile(string Coupon)
         {
-            int count = db.StudentProfile.Where(s => Coupon == Const.Null ? s.Coupon == null : s.Coupon == Coupon).Count();
+            Coupon = Coupon.ReplaceNull();
+            int count = db.StudentProfile.Where(s => s.Coupon == Coupon).Count();
             return Ok(count);
         }
 
@@ -595,26 +596,11 @@ namespace APIDemo.Controllers
 
         private void replaceStudentProfileNull(StudentProfile studentProfile)
         {
-            if (!string.IsNullOrEmpty(studentProfile.Id) && studentProfile.Id.ToLower() == Const.Null)
-            {
-                studentProfile.Id = null;
-            }
-            if (!string.IsNullOrEmpty(studentProfile.Name) && studentProfile.Name.ToLower() == Const.Null)
-            {
-                studentProfile.Name = null;
-            }
-            if (!string.IsNullOrEmpty(studentProfile.Gender) && studentProfile.Gender.ToLower() == Const.Null)
-            {
-                studentProfile.Gender = null;
-            }
-            if (!string.IsNullOrEmpty(studentProfile.Blood) && studentProfile.Blood.ToLower() == Const.Null)
-            {
-                studentProfile.Blood = null;
-            }
-            if (!string.IsNullOrEmpty(studentProfile.Coupon) && studentProfile.Coupon.ToLower() == Const.Null)
-            {
-                studentProfile.Coupon = null;
-            }
+            studentProfile.Id = studentProfile.Id.ReplaceNull();
+            studentProfile.Name = studentProfile.Name.ReplaceNull();
+            studentProfile.Gender = studentProfile.Gender.ReplaceNull();
+            studentProfile.Blood = studentProfile.Blood.ReplaceNull();
+            studentProfile.Coupon = studentProfile.Coupon.ReplaceNull();
         }
 
         // PUT: api/StudentProfiles?num=N&type=XXX  更新N筆
