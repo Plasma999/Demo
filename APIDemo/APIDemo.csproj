@@ -78,6 +78,7 @@
       <HintPath>..\packages\System.Runtime.InteropServices.RuntimeInformation.4.0.0\lib\net45\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
     </Reference>
     <Reference Include="System.Security" />
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Web.Cors, Version=5.2.6.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.Cors.5.2.6\lib\net45\System.Web.Cors.dll</HintPath>
     </Reference>
@@ -185,13 +186,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="App_Code\Const.cs" />
-    <Compile Include="App_Code\DbUtil.cs" />
-    <Compile Include="App_Code\IValidator.cs" />
-    <Compile Include="App_Code\Operator.cs" />
-    <Compile Include="App_Code\RandomID.cs" />
-    <Compile Include="App_Code\StudentProfileValidator.cs" />
-    <Compile Include="App_Code\Util.cs" />
+    <Compile Include="App\Const.cs" />
+    <Compile Include="App\DbUtil.cs" />
+    <Compile Include="App\IValidator.cs" />
+    <Compile Include="App\Operator.cs" />
+    <Compile Include="App\RandomID.cs" />
+    <Compile Include="App\StudentProfileValidator.cs" />
+    <Compile Include="App\Util.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
@@ -226,7 +227,7 @@
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\ExamController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="App_Code\RandomName.cs" />
+    <Compile Include="App\RandomName.cs" />
     <Compile Include="Controllers\StudentProfilesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
