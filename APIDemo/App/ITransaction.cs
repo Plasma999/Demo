@@ -1,4 +1,4 @@
-﻿namespace APIDemo.App_Code
+﻿namespace APIDemo.App
 {
     public interface ITransaction
     {

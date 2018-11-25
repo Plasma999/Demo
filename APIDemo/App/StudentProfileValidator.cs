@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-namespace APIDemo.App_Code
+namespace APIDemo.App
 {
     public class StudentProfileValidator
     {

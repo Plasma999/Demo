@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace APIDemo.App_Code
+namespace APIDemo.App
 {
     public class Exam
     {

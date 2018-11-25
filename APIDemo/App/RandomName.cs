@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace APIDemo.App_Code
+namespace APIDemo.App
 {
     public class RandomName
     {

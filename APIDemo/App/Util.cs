@@ -6,7 +6,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Web.Configuration;
 
-namespace APIDemo.App_Code
+namespace APIDemo.App
 {
     internal class Util
     {

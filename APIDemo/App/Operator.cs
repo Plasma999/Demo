@@ -1,4 +1,4 @@
-﻿namespace APIDemo.App_Code
+﻿namespace APIDemo.App
 {
     internal abstract class Operator
     {

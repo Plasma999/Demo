@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
 
-namespace APIDemo.App_Code
+namespace APIDemo.App
 {
     public class RandomID
     {

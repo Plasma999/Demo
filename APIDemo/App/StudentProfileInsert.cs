@@ -2,7 +2,7 @@
 using System;
 using System.Reflection;
 
-namespace APIDemo.App_Code
+namespace APIDemo.App
 {
     public class StudentProfileInsert : ITransaction
     {

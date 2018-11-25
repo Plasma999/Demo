@@ -5,7 +5,7 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Text.RegularExpressions;
 
-namespace APIDemo.App_Code
+namespace APIDemo.App
 {
     /// <summary>
     /// 資料庫通用函數
