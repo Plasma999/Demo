@@ -188,10 +188,14 @@
   <ItemGroup>
     <Compile Include="App\Const.cs" />
     <Compile Include="App\DbUtil.cs" />
+    <Compile Include="App\Exam.cs" />
+    <Compile Include="App\ITransaction.cs" />
     <Compile Include="App\IValidator.cs" />
     <Compile Include="App\Operator.cs" />
     <Compile Include="App\RandomID.cs" />
+    <Compile Include="App\StudentProfileInsert.cs" />
     <Compile Include="App\StudentProfileValidator.cs" />
+    <Compile Include="App\TransactionList.cs" />
     <Compile Include="App\Util.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
