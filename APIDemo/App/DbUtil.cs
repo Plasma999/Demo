@@ -12,7 +12,13 @@ namespace APIDemo.App
     /// </summary>
     internal class DbUtil
     {
+        public const int searchSize = 1000;
         public const int maxRowSize = 4194304;  //iisexpress.exe若為32bit，DataTable記憶體使用最大不能超過2GB
+
+        public static string getDbCountMsg(int recordSize)
+        {
+            return recordSize > searchSize ? "Data has " + recordSize + " records, only show top " + searchSize + " results." : "Data has " + recordSize + " records.";
+        }
 
         #region ADO.NET
         /// <summary>
@@ -65,20 +71,20 @@ namespace APIDemo.App
         }
 
         /// <summary>
-        /// 執行sql回傳DataTable (SqlConnection每次均開啟關閉)
+        /// 執行sql回傳DataSet (SqlConnection每次均開啟關閉)
         /// </summary>
         /// <param name="sql">sql語法</param>
         /// <param name="paramValue">參數值陣列</param>
         /// <param name="ConnStr">連線字串</param>
-        /// <returns>DataTable</returns>
-        public static DataTable ExecuteSql(string sql, string[] paramValue, string ConnStr)
+        /// <returns>DataSet</returns>
+        public static DataSet ExecuteSql(string sql, string[] paramValue, string ConnStr)
         {
-            var dt = new DataTable();
+            var ds = new DataSet();
             var sc = new SqlConnection(ConnStr);
 
             try
             {
-                dt = ExecuteSql(sql, paramValue, sc);
+                ds = ExecuteSql(sql, paramValue, sc);
             }
             catch (Exception e)
             {
@@ -89,19 +95,19 @@ namespace APIDemo.App
                 sc.Dispose();
             }
 
-            return dt;
+            return ds;
         }
 
         /// <summary>
-        /// 執行sql回傳DataTable (SqlConnection持續使用)
+        /// 執行sql回傳DataSet (SqlConnection持續使用)
         /// </summary>
         /// <param name="sql">sql語法</param>
         /// <param name="paramValue">參數值陣列</param>
         /// <param name="sc">sql連線</param>
-        /// <returns>DataTable</returns>
-        public static DataTable ExecuteSql(string sql, string[] paramValue, SqlConnection sc)
+        /// <returns>DataSet</returns>
+        public static DataSet ExecuteSql(string sql, string[] paramValue, SqlConnection sc)
         {
-            var dt = new DataTable();
+            var ds = new DataSet();
             var cmd = new SqlCommand();
 
             try
@@ -130,7 +136,7 @@ namespace APIDemo.App
                 }
 
                 var ad = new SqlDataAdapter(cmd);
-                ad.Fill(dt);
+                ad.Fill(ds);
             }
             catch (SqlException e)
             {
@@ -144,7 +150,7 @@ namespace APIDemo.App
             {
                 cmd.Dispose();
             }
-            return dt;
+            return ds;
         }
 
         /// <summary>

@@ -29,6 +29,9 @@
           <Property Name="CreateDate" Type="datetime" />
           <Property Name="UpdateDate" Type="datetime" />
         </EntityType>
+        <Function Name="getNthHighSalary" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="varchar">
+          <Parameter Name="nTh" Type="int" Mode="In" />
+        </Function>
         <Function Name="StudentProfile_Sel" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="Id_operator" Type="varchar" Mode="In" />
           <Parameter Name="Id_value" Type="varchar" Mode="In" />

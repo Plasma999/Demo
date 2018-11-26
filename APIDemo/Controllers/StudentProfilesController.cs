@@ -23,16 +23,10 @@ namespace APIDemo.Controllers
         public IHttpActionResult GetStudentProfile()
         {
             var ds = (IQueryable<StudentProfile>)db.StudentProfile;
-            string msg = getDbCountMsg(ref ds);
-            return Ok(new { msg, ds });
-        }
-
-        private string getDbCountMsg(ref IQueryable<StudentProfile> ds)
-        {
-            int maxSize = 1000;
             int recordSize = ds.Count();
-            ds = ds.Take(maxSize);
-            return recordSize > maxSize ? "Data has " + recordSize + " records, only show top " + maxSize + " results." : "Data has " + recordSize + " records.";
+            ds = ds.Take(DbUtil.searchSize);
+            string msg = DbUtil.getDbCountMsg(recordSize);
+            return Ok(new { msg, ds });
         }
 
         // GET: api/StudentProfiles?guid=XXX
@@ -116,15 +110,20 @@ namespace APIDemo.Controllers
                 return BadRequest(errMsg);
             }
 
-            var ds = db.StudentProfile_Sel(Id_operator, Id_value, Name_operator, Name_value, Coupon_operator, Coupon_value, Height_operator, Height_value, Height_value2,
-                Weight_operator, Weight_value, Weight_value2, Gender_value, Blood_value).ToList().AsQueryable();
+            string sql = @"exec StudentProfile_Sel @Id_operator = {0}, @Id_value = {1}, @Name_operator = {2}, @Name_value = {3}, @Coupon_operator = {4}, @Coupon_value = {5}, 
+                @Height_operator = {6}, @Height_value = {7}, @Height_value2 = {8}, @Weight_operator = {9}, @Weight_value = {10}, @Weight_value2 = {11}, @Gender_value = {12}, @Blood_value = {13}";
+            string[] paramValue = new string[] { Id_operator, Id_value, Name_operator, Name_value, Coupon_operator, Coupon_value, Height_operator, Height_value.ToString(), Height_value2.ToString(),
+                Weight_operator, Weight_value.ToString(), Weight_value2.ToString(), Gender_value, Blood_value};
+            DataSet dset = DbUtil.ExecuteSql(sql, paramValue, connStr);
 
-            if (ds == null)
+            if (dset == null)
             {
                 return NotFound();
             }
 
-            string msg = getDbCountMsg(ref ds);
+            int recordSize = int.Parse(dset.Tables[0].Rows[0][0].ToString());
+            string msg = DbUtil.getDbCountMsg(recordSize);
+            DataTable ds = dset.Tables[1];
             return Ok(new { msg, ds });
         }
 

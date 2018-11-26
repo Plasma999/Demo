@@ -6,7 +6,7 @@
     <edmx:Diagrams>
       <Diagram DiagramId="dc844ee0635d48ff973a66fa33b565d5" Name="Diagram1">
         <EntityTypeShape EntityType="StudentModel.StudentProfile" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="StudentModel.ExceptionLog" Width="1.5" PointX="3.375" PointY="0.75" />
+        <EntityTypeShape EntityType="StudentModel.ExceptionLog" Width="1.5" PointX="2.75" PointY="0.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
