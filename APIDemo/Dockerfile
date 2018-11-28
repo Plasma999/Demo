@@ -1,4 +1,4 @@
-﻿FROM clearmeasure/aspnet45:1.0.0
+﻿FROM microsoft/aspnet:4.6.2
 #copy web app source and utility script(s) to image
 COPY . /inetpub/wwwroot/APIDemo
 
