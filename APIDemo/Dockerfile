@@ -1,4 +1,4 @@
-﻿FROM microsoft/aspnet:4.6.2
+﻿FROM plasma999/apidemo
 #copy web app source and utility script(s) to image
 COPY . /inetpub/wwwroot/APIDemo
 
