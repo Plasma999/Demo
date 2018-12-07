@@ -6,9 +6,9 @@ using System.Data;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Data.SqlClient;
-using System.Diagnostics;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Web.Http;
 using System.Web.Http.Description;
 
@@ -18,6 +18,7 @@ namespace APIDemo.Controllers
     {
         private StudentDB db = new StudentDB();
         private string connStr = Util.getconnectionString(Const.connID);
+        private ILogger myLogger = new EventLogger();
 
         // GET: api/StudentProfiles  查詢全部
         public IHttpActionResult GetStudentProfile()
@@ -435,7 +436,7 @@ namespace APIDemo.Controllers
             }
             catch (Exception e)
             {
-                EventLog.WriteEntry(Const.AP_ID, e.ToString(), EventLogEntryType.Error);
+                myLogger.Log(Util.getDebugMsg(MethodBase.GetCurrentMethod(), e.ToString()));
             }
             finally
             {
@@ -457,7 +458,7 @@ namespace APIDemo.Controllers
             }
             catch (Exception e)
             {
-                EventLog.WriteEntry(Const.AP_ID, e.ToString(), EventLogEntryType.Error);
+                myLogger.Log(Util.getDebugMsg(MethodBase.GetCurrentMethod(), e.ToString()));
             }
 
             return result;
@@ -482,7 +483,7 @@ namespace APIDemo.Controllers
             }
             catch (Exception e)
             {
-                EventLog.WriteEntry(Const.AP_ID, e.ToString(), EventLogEntryType.Error);
+                myLogger.Log(Util.getDebugMsg(MethodBase.GetCurrentMethod(), e.ToString()));
             }
 
             return result;
@@ -521,7 +522,7 @@ namespace APIDemo.Controllers
             }
             catch (Exception e)
             {
-                EventLog.WriteEntry(Const.AP_ID, e.ToString(), EventLogEntryType.Error);
+                myLogger.Log(Util.getDebugMsg(MethodBase.GetCurrentMethod(), e.ToString()));
             }
 
             return result;
@@ -548,7 +549,7 @@ namespace APIDemo.Controllers
             }
             catch (Exception e)
             {
-                EventLog.WriteEntry(Const.AP_ID, e.ToString(), EventLogEntryType.Error);
+                myLogger.Log(Util.getDebugMsg(MethodBase.GetCurrentMethod(), e.ToString()));
             }
 
             return result;
@@ -695,7 +696,7 @@ namespace APIDemo.Controllers
             }
             catch (Exception e)
             {
-                EventLog.WriteEntry(Const.AP_ID, e.ToString(), EventLogEntryType.Error);
+                myLogger.Log(Util.getDebugMsg(MethodBase.GetCurrentMethod(), e.ToString()));
             }
             finally
             {
@@ -723,7 +724,7 @@ namespace APIDemo.Controllers
             }
             catch (Exception e)
             {
-                EventLog.WriteEntry(Const.AP_ID, e.ToString(), EventLogEntryType.Error);
+                myLogger.Log(Util.getDebugMsg(MethodBase.GetCurrentMethod(), e.ToString()));
             }
 
             return result;
@@ -740,7 +741,7 @@ namespace APIDemo.Controllers
             }
             catch (Exception e)
             {
-                EventLog.WriteEntry(Const.AP_ID, e.ToString(), EventLogEntryType.Error);
+                myLogger.Log(Util.getDebugMsg(MethodBase.GetCurrentMethod(), e.ToString()));
             }
 
             return result;
@@ -770,7 +771,7 @@ namespace APIDemo.Controllers
             }
             catch (Exception e)
             {
-                EventLog.WriteEntry(Const.AP_ID, e.ToString(), EventLogEntryType.Error);
+                myLogger.Log(Util.getDebugMsg(MethodBase.GetCurrentMethod(), e.ToString()));
             }
 
             return result;
@@ -806,7 +807,7 @@ namespace APIDemo.Controllers
                 }
                 catch (Exception e)
                 {
-                    EventLog.WriteEntry(Const.AP_ID, e.ToString(), EventLogEntryType.Error);
+                    myLogger.Log(Util.getDebugMsg(MethodBase.GetCurrentMethod(), e.ToString()));
                     return BadRequest("delete DB has error, see detail in EventLog");
                 }
             }

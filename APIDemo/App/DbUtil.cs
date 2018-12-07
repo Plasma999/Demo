@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Data;
 using System.Data.SqlClient;
-using System.Diagnostics;
 using System.Reflection;
 using System.Text.RegularExpressions;
 
@@ -14,6 +13,7 @@ namespace APIDemo.App
     {
         public const int searchSize = 1000;
         public const int maxRowSize = 4194304;  //iisexpress.exe若為32bit，DataTable記憶體使用最大不能超過2GB
+        private static ILogger myLogger = new EventLogger();
 
         public static string getDbCountMsg(int recordSize)
         {
@@ -88,7 +88,7 @@ namespace APIDemo.App
             }
             catch (Exception e)
             {
-                EventLog.WriteEntry(Const.AP_ID, Util.getDebugMsg(MethodBase.GetCurrentMethod(), e.ToString()), EventLogEntryType.Error);
+                myLogger.Log(Util.getDebugMsg(MethodBase.GetCurrentMethod(), e.ToString()));
             }
             finally
             {
@@ -140,11 +140,11 @@ namespace APIDemo.App
             }
             catch (SqlException e)
             {
-                EventLog.WriteEntry(Const.AP_ID, Util.getDebugMsg(MethodBase.GetCurrentMethod(), e.ToString() + ", sql: " + getFullSql(sql, paramValue)), EventLogEntryType.Error);
+                myLogger.Log(Util.getDebugMsg(MethodBase.GetCurrentMethod(), e.ToString() + ", sql: " + getFullSql(sql, paramValue)));
             }
             catch (Exception e)
             {
-                EventLog.WriteEntry(Const.AP_ID, Util.getDebugMsg(MethodBase.GetCurrentMethod(), e.ToString()), EventLogEntryType.Error);
+                myLogger.Log(Util.getDebugMsg(MethodBase.GetCurrentMethod(), e.ToString()));
             }
             finally
             {
@@ -172,7 +172,7 @@ namespace APIDemo.App
             }
             catch (Exception e)
             {
-                EventLog.WriteEntry(Const.AP_ID, Util.getDebugMsg(MethodBase.GetCurrentMethod(), e.ToString()), EventLogEntryType.Error);
+                myLogger.Log(Util.getDebugMsg(MethodBase.GetCurrentMethod(), e.ToString()));
             }
             finally
             {
@@ -225,14 +225,12 @@ namespace APIDemo.App
             catch (SqlException e)
             {
                 nRet = -1;
-                EventLog.WriteEntry(Const.AP_ID, Util.getDebugMsg(MethodBase.GetCurrentMethod(), e.ToString() + ", nRet: " +
-                    nRet + ", sql: " + getFullSql(sql, paramValue)), EventLogEntryType.Error);
+                myLogger.Log(Util.getDebugMsg(MethodBase.GetCurrentMethod(), e.ToString() + ", nRet: " + nRet + ", sql: " + getFullSql(sql, paramValue)));
             }
             catch (Exception e)
             {
                 nRet = -2;
-                EventLog.WriteEntry(Const.AP_ID, Util.getDebugMsg(MethodBase.GetCurrentMethod(), e.ToString() + ", nRet: " +
-                    nRet), EventLogEntryType.Error);
+                myLogger.Log(Util.getDebugMsg(MethodBase.GetCurrentMethod(), e.ToString() + ", nRet: " + nRet));
             }
             finally
             {
@@ -278,7 +276,7 @@ namespace APIDemo.App
             }
             catch (Exception e)
             {
-                EventLog.WriteEntry(Const.AP_ID, Util.getDebugMsg(MethodBase.GetCurrentMethod(), e.ToString()), EventLogEntryType.Error);
+                myLogger.Log(Util.getDebugMsg(MethodBase.GetCurrentMethod(), e.ToString()));
             }
             finally
             {
@@ -345,7 +343,7 @@ namespace APIDemo.App
             }
             catch (Exception e)
             {
-                EventLog.WriteEntry(Const.AP_ID, Util.getDebugMsg(MethodBase.GetCurrentMethod(), e.ToString()), EventLogEntryType.Error);
+                myLogger.Log(Util.getDebugMsg(MethodBase.GetCurrentMethod(), e.ToString()));
             }
             finally
             {

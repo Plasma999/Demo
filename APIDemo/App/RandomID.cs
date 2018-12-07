@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Reflection;
 
 namespace APIDemo.App
 {
     public class RandomID
     {
+        private ILogger myLogger = new EventLogger();
+
         /// <summary>
         /// 取得隨機身分證字號List
         /// </summary>
@@ -51,7 +52,7 @@ namespace APIDemo.App
             }
             catch (Exception e)
             {
-                EventLog.WriteEntry(Const.AP_ID, Util.getDebugMsg(MethodBase.GetCurrentMethod(), e.ToString()), EventLogEntryType.Error);
+                myLogger.Log(Util.getDebugMsg(MethodBase.GetCurrentMethod(), e.ToString()));
             }
 
             return ID;

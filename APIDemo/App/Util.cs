@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
@@ -10,6 +9,8 @@ namespace APIDemo.App
 {
     internal class Util
     {
+        private static ILogger myLogger = new EventLogger();
+
         ///<summary>
         ///取得除錯訊息
         ///</summary>
@@ -31,7 +32,7 @@ namespace APIDemo.App
             }
             catch (Exception e)
             {
-                EventLog.WriteEntry(Const.AP_ID, getDebugMsg(MethodBase.GetCurrentMethod(), e.ToString()), EventLogEntryType.Error);
+                myLogger.Log(getDebugMsg(MethodBase.GetCurrentMethod(), e.ToString()));
             }
 
             return connStr;
@@ -47,7 +48,7 @@ namespace APIDemo.App
             }
             catch (Exception e)
             {
-                EventLog.WriteEntry(Const.AP_ID, getDebugMsg(MethodBase.GetCurrentMethod(), e.ToString()), EventLogEntryType.Error);
+                myLogger.Log(getDebugMsg(MethodBase.GetCurrentMethod(), e.ToString()));
             }
 
             return appString;
