@@ -201,7 +201,7 @@
                 }
             },
             error: function (xhr, textStatus, errorThrown) {
-                alert(errorThrown);
+                alert(xhr.responseJSON.Message);
             },
             complete: function () {
                 for (var i = 1; i <= colNum; i++) {
@@ -222,7 +222,7 @@
                 testGetAll();
             },
             error: function (xhr, textStatus, errorThrown) {
-                alert(errorThrown);
+                alert(xhr.responseJSON.Message);
             }
         });
     }
@@ -241,7 +241,7 @@
                 testGetAll();
             },
             error: function (xhr, textStatus, errorThrown) {
-                alert(errorThrown);
+                alert(xhr.responseJSON.Message);
             }
         });
     }
