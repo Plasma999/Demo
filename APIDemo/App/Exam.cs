@@ -64,5 +64,26 @@ namespace APIDemo.App
 
             return result;
         }
+
+        public string Fibonacci_Test()
+        {
+            var f = new Fibonacci();
+            int number = 10;
+            string result = "Test number: " + number + "<br>For Loop: ";
+            for (int i = 0; i < 10; i++)
+            {
+                result += f.Fibonacci_For_Loop(i) + ",";
+            }
+            result = result.TrimEnd(',');
+
+            result += "<br>Recursive: ";
+            for (int i = 0; i < 10; i++)
+            {
+                result += f.Fibonacci_Recursive(0, 1, 0, i) + ",";
+            }
+            result = result.TrimEnd(',');
+
+            return result;
+        }
     }
 }

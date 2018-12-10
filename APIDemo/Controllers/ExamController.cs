@@ -19,6 +19,9 @@ namespace APIDemo.Controllers
                 case "2":
                     result = exam.TransactionRollBack();
                     break;
+                case "3":
+                    result = exam.Fibonacci_Test();
+                    break;
                 default:
                     return BadRequest("invalid examNo: " + examNo);
             }

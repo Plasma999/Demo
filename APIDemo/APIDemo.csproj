@@ -190,6 +190,7 @@
     <Compile Include="App\DbUtil.cs" />
     <Compile Include="App\EventLogger.cs" />
     <Compile Include="App\Exam.cs" />
+    <Compile Include="App\Fibonacci.cs" />
     <Compile Include="App\ILogger.cs" />
     <Compile Include="App\ITransaction.cs" />
     <Compile Include="App\IValidator.cs" />
