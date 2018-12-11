@@ -19,14 +19,12 @@
 
         public int Fibonacci_Recursive(int a, int b, int count, int number)
         {
-            int temp = a;
-
             if (count < number)
             {
-                temp = Fibonacci_Recursive(b, a + b, count + 1, number);
+                a = Fibonacci_Recursive(b, a + b, count + 1, number);
             }
 
-            return temp;
+            return a;
         }
     }
 }
