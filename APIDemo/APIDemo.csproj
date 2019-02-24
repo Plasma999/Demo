@@ -288,7 +288,6 @@
     <Content Include="Scripts\datatables.min.css" />
     <Content Include="Content\fonts.css" />
     <Content Include="Content\jquery.smartmenus.bootstrap.css" />
-    <Content Include="Content\patentcloud-icon.css" />
     <Content Include="Content\patentcloud.css" />
     <Content Include="Content\plugins.css" />
     <Content Include="Content\style.css" />
