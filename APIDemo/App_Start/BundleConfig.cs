@@ -13,11 +13,6 @@ namespace APIDemo
                         "~/Scripts/jquery-extend.js",
                         "~/Scripts/share.js",
                         "~/Scripts/DataTables-1.10.18/js/jquery.dataTables.min.js",
-                        "~/Scripts/DataTables-1.10.18/js/dataTables.bootstrap.min.js",
-                        "~/Scripts/DataTables-1.10.18/js/dataTables.bootstrap4.min.js",
-                        "~/Scripts/DataTables-1.10.18/js/dataTables.foundation.min.js",
-                        "~/Scripts/DataTables-1.10.18/js/dataTables.jqueryui.min.js",
-                        "~/Scripts/DataTables-1.10.18/js/dataTables.semanticui.min.js",
                         "~/Scripts/flot-0.8.3/jquery.flot.min.js",
                         "~/Scripts/flot-0.8.3/jquery.flot.pie.min.js"));
 
@@ -39,12 +34,7 @@ namespace APIDemo
                       "~/Content/patentcloud.css",
                       "~/Content/jquery.smartmenus.bootstrap.css",
                       "~/Content/style.css",
-                      "~/Scripts/DataTables-1.10.18/css/jquery.dataTables.min.css",
-                      "~/Scripts/DataTables-1.10.18/css/dataTables.bootstrap.min.css",
-                      "~/Scripts/DataTables-1.10.18/css/dataTables.bootstrap4.min.css",
-                      "~/Scripts/DataTables-1.10.18/css/dataTables.foundation.min.css",
-                      "~/Scripts/DataTables-1.10.18/css/dataTables.jqueryui.min.css",
-                      "~/Scripts/DataTables-1.10.18/css/dataTables.semanticui.min.css"));
+                      "~/Scripts/DataTables-1.10.18/css/jquery.dataTables.min.css"));
         }
     }
 }
