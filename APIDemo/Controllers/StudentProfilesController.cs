@@ -9,6 +9,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Net;
 using System.Reflection;
+using System.Web;
 using System.Web.Http;
 using System.Web.Http.Description;
 
@@ -23,11 +24,11 @@ namespace APIDemo.Controllers
         // GET: api/StudentProfiles  查詢全部
         public IHttpActionResult GetStudentProfile()
         {
-            var ds = (IQueryable<StudentProfile>)db.StudentProfile;
-            int recordSize = ds.Count();
-            ds = ds.Take(DbUtil.searchSize);
+            var data = (IQueryable<StudentProfile>)db.StudentProfile;
+            int recordSize = data.Count();
+            data = data.Take(DbUtil.searchSize);
             string msg = DbUtil.getDbCountMsg(recordSize);
-            return Ok(new { msg, ds });
+            return Ok(new { msg, data });
         }
 
         // GET: api/StudentProfiles?guid=XXX
@@ -64,6 +65,19 @@ namespace APIDemo.Controllers
         [ResponseType(typeof(StudentProfile))]
         public IHttpActionResult GetStudentProfile(string Id, string Name, string Gender, string Blood, string Height, string Weight, string Coupon)
         {
+            var obj = new ServerSideProcessingModel();
+            if (!string.IsNullOrEmpty(HttpContext.Current.Request.QueryString["start"]?.ToString()))
+            {
+                obj = new ServerSideProcessingModel()
+                {
+                    Start = int.Parse(HttpContext.Current.Request.QueryString["start"]),
+                    Length = int.Parse(HttpContext.Current.Request.QueryString["length"]),
+                    OrderIndex = int.Parse(HttpContext.Current.Request.QueryString["order[0][column]"]),
+                    OrderByAsc = HttpContext.Current.Request.QueryString["order[0][dir]"]
+                };
+                obj.OrderBy = obj.ConvertOrderBy(obj.OrderIndex);
+            }
+
             string errMsg = "";
             string Id_operator = "";
             string Id_value = "";
@@ -112,20 +126,23 @@ namespace APIDemo.Controllers
             }
 
             string sql = @"exec StudentProfile_Sel @Id_operator = {0}, @Id_value = {1}, @Name_operator = {2}, @Name_value = {3}, @Coupon_operator = {4}, @Coupon_value = {5}, 
-                @Height_operator = {6}, @Height_value = {7}, @Height_value2 = {8}, @Weight_operator = {9}, @Weight_value = {10}, @Weight_value2 = {11}, @Gender_value = {12}, @Blood_value = {13}";
+                @Height_operator = {6}, @Height_value = {7}, @Height_value2 = {8}, @Weight_operator = {9}, @Weight_value = {10}, @Weight_value2 = {11}, @Gender_value = {12}, @Blood_value = {13},
+                @Start = {14}, @Length = {15}, @OrderBy = {16}, @OrderByAsc = {17}";
             string[] paramValue = new string[] { Id_operator, Id_value, Name_operator, Name_value, Coupon_operator, Coupon_value, Height_operator, Height_value.ToString(), Height_value2.ToString(),
-                Weight_operator, Weight_value.ToString(), Weight_value2.ToString(), Gender_value, Blood_value};
+                Weight_operator, Weight_value.ToString(), Weight_value2.ToString(), Gender_value, Blood_value, obj.Start.ToString(), obj.Length.ToString(), obj.OrderBy, obj.OrderByAsc };
             DataSet dset = DbUtil.ExecuteSql(sql, paramValue, connStr);
 
-            if (dset == null)
+            if (dset == null || dset.Tables.Count < 2)
             {
                 return NotFound();
             }
 
             int recordSize = int.Parse(dset.Tables[0].Rows[0][0].ToString());
             string msg = DbUtil.getDbCountMsg(recordSize);
-            DataTable ds = dset.Tables[1];
-            return Ok(new { msg, ds });
+            DataTable data = dset.Tables[1];
+            int recordsTotal = recordSize;
+            int recordsFiltered = recordSize;
+            return Ok(new { msg, recordsTotal, recordsFiltered, data });
         }
 
         private bool parseSyntax(string syntax, Input_Type input_Type, ref string xxx_operator, ref decimal xxx_value, ref decimal xxx_value2, ref string errMsg)

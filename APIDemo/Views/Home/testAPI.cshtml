@@ -63,7 +63,7 @@
         $('#span_table').html('<table id="table1" style="font-size:12px;"></table>');  //初始化table1
 
         var api = "../api/StudentProfiles/";
-        if (id_syntax == '' && name_syntax == '' && gender_syntax == '' && blood_syntax == '' && height_syntax == '' && weight_syntax == '' && coupon_syntax == '') {
+        if (id_syntax == '' && name_syntax == '' && gender_syntax == '' && blood_syntax == '' && height_syntax == '' && weight_syntax == '' && coupon_syntax == '' && $('#select_dataTable_processing').val() == 'Client') {
 
         }
         else {  //組API url: api/StudentProfiles/{Id}?Name={Name}&Gender={Gender}&Blood={Blood}&Height={Height}&Weight={Weight}&Coupon={Coupon}
@@ -82,32 +82,99 @@
             api += coupon_syntax == '' ? noNeed : coupon_syntax;
         }
 
-        $.getJSON(api, function (result) {
-            $('#span_msg').text(result.msg);
+        $('#table1').html('<thead><tr><th>Id</th><th>Name</th><th>Gender</th><th>Blood</th><th>Height</th><th>Weight</th><th>Coupon</th><th></th></tr></thead><tbody>');
 
-            $('#table1').html('<thead><tr><th>Id</th><th>Name</th><th>Gender</th><th>Blood</th><th>Height</th><th>Weight</th><th>Coupon</th><th></th></tr></thead><tbody>');
-            $.each(result.ds, function (i, item) {
-                var $tr = $('<tr>').append(
-                    $('<td>').html('<span class="col1">' + item.Id + '</span>'),
-                    $('<td>').html('<span class="col2">' + item.Name + '</span>'),
-                    $('<td>').html('<span class="col3">' + item.Gender + '</span>'),
-                    $('<td>').html('<span class="col4">' + item.Blood + '</span>'),
-                    $('<td>').html('<span class="col5">' + item.Height + '</span>'),
-                    $('<td>').html('<span class="col6">' + item.Weight + '</span>'),
-                    $('<td>').html('<span class="col7">' + item.Coupon + '</span>'),
-                    $('<td>').html('<input type="button" class="normal" value="修改" onclick="toUpdate();" /> <input type="button" style="display:none" class="toUpdate" value="確定修改" onclick="testPut(\'' + item.guid + '\');" /> <input type="button" style="display:none" class="toUpdate" value="取消" onclick="cancelUpdate();" /> <input type="button" class="normal" value="刪除" onclick="testDelete(\'' + item.guid + '\');" />')
-                ).appendTo('#table1');
-            });
-            $('#table1').DataTable({
-                "columnDefs": [
-                    { "orderable": false, "targets": 7 }  //第七個欄位取消排序
-                ]
-            });
-        }).fail(function (jqXHR, textStatus, errorThrown) {
-            alert(jqXHR.responseJSON.Message);
-        }).always(function () {
-            $('#loading').hide();
-        });
+        switch ($('#select_dataTable_processing').val()) {
+            case 'Client':
+                $.getJSON(api, function (result) {
+                    $('#span_msg').text(result.msg);
+
+                    $.each(result.data, function (i, item) {
+                        $('<tr>').append(
+                            $('<td>').html('<span class="col1">' + item.Id + '</span>'),
+                            $('<td>').html('<span class="col2">' + item.Name + '</span>'),
+                            $('<td>').html('<span class="col3">' + item.Gender + '</span>'),
+                            $('<td>').html('<span class="col4">' + item.Blood + '</span>'),
+                            $('<td>').html('<span class="col5">' + item.Height + '</span>'),
+                            $('<td>').html('<span class="col6">' + item.Weight + '</span>'),
+                            $('<td>').html('<span class="col7">' + item.Coupon + '</span>'),
+                            $('<td>').html('<input type="button" class="normal" value="修改" onclick="toUpdate();" /> <input type="button" style="display:none" class="toUpdate" value="確定修改" onclick="testPut(\'' + item.guid + '\');" /> <input type="button" style="display:none" class="toUpdate" value="取消" onclick="cancelUpdate();" /> <input type="button" class="normal" value="刪除" onclick="testDelete(\'' + item.guid + '\');" />')
+                        ).appendTo('#table1');
+                    });
+                    $('#table1').DataTable({
+                        "columnDefs": [
+                            { "orderable": false, "targets": 7 }  //第七個欄位取消排序
+                        ]
+                    });
+                }).fail(function (jqXHR, textStatus, errorThrown) {
+                    alert(jqXHR.responseJSON.Message);
+                }).always(function () {
+                    $('#loading').hide();
+                });
+                break;
+            case 'Server':
+                $('#table1').DataTable({
+                    "columnDefs": [
+                        { "orderable": false, "targets": 7 }  //第七個欄位取消排序
+                    ],
+                    "serverSide": true,
+                    "searching": false,  //關閉搜尋功能
+                    "ajax": {
+                        "url": api,
+                        "beforeSend": function () {
+                            $('#loading').show();
+                            $('#span_msg').text('');
+                        },
+                        "complete": function () {
+                            $('#loading').hide();
+                        }
+                    },
+                    "columns": [
+                        {
+                            "data": function (result) {
+                                return '<span class="col1">' + result.Id + '</span>';
+                            }
+                        },
+                        {
+                            "data": function (result) {
+                                return '<span class="col2">' + result.Name + '</span>';
+                            }
+                        },
+                        {
+                            "data": function (result) {
+                                return '<span class="col3">' + result.Gender + '</span>';
+                            }
+                        },
+                        {
+                            "data": function (result) {
+                                return '<span class="col4">' + result.Blood + '</span>';
+                            }
+                        },
+                        {
+                            "data": function (result) {
+                                return '<span class="col5">' + result.Height + '</span>';
+                            }
+                        },
+                        {
+                            "data": function (result) {
+                                return '<span class="col6">' + result.Weight + '</span>';
+                            }
+                        },
+                        {
+                            "data": function (result) {
+                                return '<span class="col7">' + result.Coupon + '</span>';
+                            }
+                        },
+                        {
+                            "data": function (result) {
+                                return '<input type="button" class="normal" value="修改" onclick="toUpdate();" /> <input type="button" style="display:none" class="toUpdate" value="確定修改" onclick="testPut(\'' +
+                                    result.guid + '\');" /> <input type="button" style="display:none" class="toUpdate" value="取消" onclick="cancelUpdate();" /> <input type="button" class="normal" value="刪除" onclick="testDelete(\'' + result.guid + '\');" />';
+                            }
+                        },
+                    ]
+                });
+                break;
+        }
     }
 
     function testPost() {
@@ -335,6 +402,13 @@
             </div>
             <div class="wow fadeInLeft" data-wow-offset="120" data-wow-duration="1.5s" style="visibility: visible; animation-duration: 1.5s; animation-name: fadeInLeft;">
                 <div class="tab-content">
+                    <p>
+                        dataTable.js Processing
+                        <select id="select_dataTable_processing" style="font-size: 15px;">
+                            <option value="Client">Client</option>
+                            <option value="Server">Server</option>
+                        </select>
+                    </p>
                     <p>
                         <span id="span_msg"></span>
                     </p>
