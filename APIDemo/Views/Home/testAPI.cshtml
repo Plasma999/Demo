@@ -2,6 +2,10 @@
     td, th {
         padding: 3px;
     }
+
+        td.highlight {
+            background-color: whitesmoke !important;
+        }
 </style>
 <script type="text/javascript">
     function uuidv4() {
@@ -104,7 +108,15 @@
                     $('#table1').DataTable({
                         "columnDefs": [
                             { "orderable": false, "targets": 7 }  //第七個欄位取消排序
-                        ]
+                        ],
+                        "lengthMenu": [10, 20, 40, 60, 80, 100]  //顯示幾筆的選單
+                    });
+
+                    var table = $('#table1').DataTable();
+                    $('#table1 tbody').on('mouseenter', 'td', function () {
+                        var cellIdx = table.cell(this).index();
+                        $(table.cells().nodes()).removeClass('highlight');
+                        $(table.cell(cellIdx).nodes()).addClass('highlight');  //滑鼠移動到的cell做highlight
                     });
                 }).fail(function (jqXHR, textStatus, errorThrown) {
                     alert(jqXHR.responseJSON.Message);
@@ -119,6 +131,16 @@
                     ],
                     "serverSide": true,
                     "searching": false,  //關閉搜尋功能
+                    "language": {
+                        "info": "显示 _START_ 至 _END_ 笔, 共 _TOTAL_ 笔",
+                        "lengthMenu": "显示 _MENU_ 笔",
+                        "paginate": {
+                            "first":      "第一页",
+                            "last":       "最后页",
+                            "next":       "下一页",
+                            "previous":   "前一页"
+                        }
+                    },
                     "ajax": {
                         "url": api,
                         "beforeSend": function () {
