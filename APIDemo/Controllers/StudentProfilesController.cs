@@ -3,9 +3,9 @@ using APIDemo.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Data.SqlClient;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Reflection;
@@ -49,7 +49,7 @@ namespace APIDemo.Controllers
         public IHttpActionResult GetStudentProfile(string Coupon)
         {
             Coupon = Coupon.ReplaceNull();
-            int count = db.StudentProfile.Where(s => s.Coupon == Coupon).Count();
+            int count = db.StudentProfile.Count(s => s.Coupon == Coupon);
             return Ok(count);
         }
 
@@ -66,7 +66,7 @@ namespace APIDemo.Controllers
         public IHttpActionResult GetStudentProfile(string Id, string Name, string Gender, string Blood, string Height, string Weight, string Coupon)
         {
             var obj = new ServerSideProcessingModel();
-            if (!string.IsNullOrEmpty(HttpContext.Current.Request.QueryString["start"]?.ToString()))
+            if (!string.IsNullOrEmpty(HttpContext.Current.Request.QueryString["start"]))
             {
                 obj = new ServerSideProcessingModel()
                 {
@@ -79,48 +79,48 @@ namespace APIDemo.Controllers
             }
 
             string errMsg = "";
-            string Id_operator = "";
-            string Id_value = "";
-            string Name_operator = "";
-            string Name_value = "";
-            string Coupon_operator = "";
-            string Coupon_value = "";
-            string Height_operator = "";
-            decimal Height_value = 0;
-            decimal Height_value2 = 0;
-            string Weight_operator = "";
-            decimal Weight_value = 0;
-            decimal Weight_value2 = 0;
-            string Gender_operator = "";
-            string Gender_value = "";
-            string Blood_operator = "";
-            string Blood_value = "";
+            string idOperator = "";
+            string idValue = "";
+            string nameOperator = "";
+            string nameValue = "";
+            string couponOperator = "";
+            string couponValue = "";
+            string heightOperator = "";
+            decimal heightValue = 0;
+            decimal heightValue2 = 0;
+            string weightOperator = "";
+            decimal weightValue = 0;
+            decimal weightValue2 = 0;
+            string genderOperator = "";
+            string genderValue = "";
+            string bloodOperator = "";
+            string bloodValue = "";
 
-            if (!parseSyntax(Id, Input_Type.String, ref Id_operator, ref Id_value, ref errMsg))
+            if (!ParseSyntax(Id, InputType.String, ref idOperator, ref idValue, ref errMsg))
             {
                 return BadRequest(errMsg);
             }
-            if (!parseSyntax(Name, Input_Type.String, ref Name_operator, ref Name_value, ref errMsg))
+            if (!ParseSyntax(Name, InputType.String, ref nameOperator, ref nameValue, ref errMsg))
             {
                 return BadRequest(errMsg);
             }
-            if (!parseSyntax(Coupon, Input_Type.String, ref Coupon_operator, ref Coupon_value, ref errMsg))
+            if (!ParseSyntax(Coupon, InputType.String, ref couponOperator, ref couponValue, ref errMsg))
             {
                 return BadRequest(errMsg);
             }
-            if (!parseSyntax(Height, Input_Type.Decimal, ref Height_operator, ref Height_value, ref Height_value2, ref errMsg))
+            if (!ParseSyntax(Height, InputType.Decimal, ref heightOperator, ref heightValue, ref heightValue2, ref errMsg))
             {
                 return BadRequest(errMsg);
             }
-            if (!parseSyntax(Weight, Input_Type.Decimal, ref Weight_operator, ref Weight_value, ref Weight_value2, ref errMsg))
+            if (!ParseSyntax(Weight, InputType.Decimal, ref weightOperator, ref weightValue, ref weightValue2, ref errMsg))
             {
                 return BadRequest(errMsg);
             }
-            if (!parseSyntax(Gender, Input_Type.String, ref Gender_operator, ref Gender_value, ref errMsg))
+            if (!ParseSyntax(Gender, InputType.String, ref genderOperator, ref genderValue, ref errMsg))
             {
                 return BadRequest(errMsg);
             }
-            if (!parseSyntax(Blood, Input_Type.String, ref Blood_operator, ref Blood_value, ref errMsg))
+            if (!ParseSyntax(Blood, InputType.String, ref bloodOperator, ref bloodValue, ref errMsg))
             {
                 return BadRequest(errMsg);
             }
@@ -128,31 +128,37 @@ namespace APIDemo.Controllers
             string sql = @"exec StudentProfile_Sel @Id_operator = {0}, @Id_value = {1}, @Name_operator = {2}, @Name_value = {3}, @Coupon_operator = {4}, @Coupon_value = {5}, 
                 @Height_operator = {6}, @Height_value = {7}, @Height_value2 = {8}, @Weight_operator = {9}, @Weight_value = {10}, @Weight_value2 = {11}, @Gender_value = {12}, @Blood_value = {13},
                 @Start = {14}, @Length = {15}, @OrderBy = {16}, @OrderByAsc = {17}";
-            string[] paramValue = new string[] { Id_operator, Id_value, Name_operator, Name_value, Coupon_operator, Coupon_value, Height_operator, Height_value.ToString(), Height_value2.ToString(),
-                Weight_operator, Weight_value.ToString(), Weight_value2.ToString(), Gender_value, Blood_value, obj.Start.ToString(), obj.Length.ToString(), obj.OrderBy, obj.OrderByAsc };
-            DataSet dset = DbUtil.ExecuteSql(sql, paramValue, connStr);
+            string[] paramValue =
+            {
+                idOperator, idValue, nameOperator, nameValue, couponOperator, couponValue, heightOperator,
+                heightValue.ToString(CultureInfo.InvariantCulture), heightValue2.ToString(CultureInfo.InvariantCulture),
+                weightOperator, weightValue.ToString(CultureInfo.InvariantCulture),
+                weightValue2.ToString(CultureInfo.InvariantCulture), genderValue, bloodValue, obj.Start.ToString(),
+                obj.Length.ToString(), obj.OrderBy, obj.OrderByAsc
+            };
+            DataSet dataSet = DbUtil.ExecuteSql(sql, paramValue, connStr);
 
-            if (dset == null || dset.Tables.Count < 2)
+            if (dataSet == null || dataSet.Tables.Count < 2)
             {
                 return NotFound();
             }
 
-            int recordSize = int.Parse(dset.Tables[0].Rows[0][0].ToString());
+            int recordSize = int.Parse(dataSet.Tables[0].Rows[0][0].ToString());
             string msg = DbUtil.getDbCountMsg(recordSize);
-            DataTable data = dset.Tables[1];
+            DataTable data = dataSet.Tables[1];
             int recordsTotal = recordSize;
             int recordsFiltered = recordSize;
             return Ok(new { msg, recordsTotal, recordsFiltered, data });
         }
 
-        private bool parseSyntax(string syntax, Input_Type input_Type, ref string xxx_operator, ref decimal xxx_value, ref decimal xxx_value2, ref string errMsg)
+        private bool ParseSyntax(string syntax, InputType inputType, ref string xxxOperator, ref decimal xxxValue, ref decimal xxxValue2, ref string errMsg)
         {
             string temp = "";
-            bool result = parseSyntax(syntax, input_Type, ref xxx_operator, ref temp, ref errMsg);
+            bool result = ParseSyntax(syntax, inputType, ref xxxOperator, ref temp, ref errMsg);
 
             if (result)
             {
-                if (input_Type == Input_Type.Decimal && xxx_operator == new Operator_between().Name)  //遇到between，要將原本的xxx.x,xxx.x，解析成兩個數值
+                if (inputType == InputType.Decimal && xxxOperator == new Operator_between().Name)  //遇到between，要將原本的xxx.x,xxx.x，解析成兩個數值
                 {
                     string[] decimalArray = temp.Split(',');
                     if (decimalArray.Length != 2)
@@ -160,63 +166,56 @@ namespace APIDemo.Controllers
                         errMsg = "invalid decimal format! " + temp;
                         return false;
                     }
-                    xxx_value = decimal.Parse(decimalArray[0]);
-                    xxx_value2 = decimal.Parse(decimalArray[1]);
+                    xxxValue = decimal.Parse(decimalArray[0]);
+                    xxxValue2 = decimal.Parse(decimalArray[1]);
                 }
                 else if (!string.IsNullOrEmpty(temp))
                 {
-                    xxx_value = decimal.Parse(temp);
+                    xxxValue = decimal.Parse(temp);
                 }
             }
 
             return result;
         }
 
-        private bool parseSyntax(string syntax, Input_Type input_Type, ref string xxx_operator, ref string xxx_value, ref string errMsg)
+        private bool ParseSyntax(string syntax, InputType inputType, ref string xxxOperator, ref string xxxValue, ref string errMsg)
         {
-            bool result = false;
-            string noNeed = "noNeed";
-
-            if (syntax != noNeed)
+            if (syntax == "noNeed")
             {
-                string[] array = syntax.Split('|');
-                if (array.Length != 2)
-                {
-                    errMsg = "invalid input! " + syntax;
-                    return result;
-                }
+                return true;
+            }
 
-                if (!checkOperator(array[0], input_Type))
-                {
-                    errMsg = "invalid operator: " + array[0];
-                    return result;
-                }
-                else
-                {
-                    array[0] = convertOperator(array[0]);
-                    if (input_Type == Input_Type.String && array[0] == new Operator_like().Name)  //遇到like，要做%轉換
-                    {
-                        array[1] = array[1].Replace(Const.percentage, "%");
-                    }
-                    if (input_Type == Input_Type.String && array[0] == new Operator_in().Name)  //遇到in，要變成xxx','xxx','xxx
-                    {
-                        array[1] = array[1].Replace(",", "','");
-                    }
+            string[] array = syntax.Split('|');
+            if (array.Length != 2)
+            {
+                errMsg = "invalid input! " + syntax;
+                return false;
+            }
 
-                    xxx_operator = array[0];
-                    xxx_value = array[1];
-                    result = true;
-                }
+            if (!checkOperator(array[0], inputType))
+            {
+                errMsg = "invalid operator: " + array[0];
+                return false;
             }
             else
             {
-                result = true;
-            }
+                array[0] = convertOperator(array[0]);
+                if (inputType == InputType.String && array[0] == new Operator_like().Name)  //遇到like，要做%轉換
+                {
+                    array[1] = array[1].Replace(Const.percentage, "%");
+                }
+                if (inputType == InputType.String && array[0] == new Operator_in().Name)  //遇到in，要變成xxx','xxx','xxx
+                {
+                    array[1] = array[1].Replace(",", "','");
+                }
 
-            return result;
+                xxxOperator = array[0];
+                xxxValue = array[1];
+                return true;
+            }
         }
 
-        private string convertOperator(string id_operator)
+        private string convertOperator(string idOperator)
         {
             var operators = new List<Operator>();
             operators.Add(new Operator_equal());
@@ -230,33 +229,33 @@ namespace APIDemo.Controllers
 
             foreach (var o in operators)
             {
-                if (id_operator == o.Name)
+                if (idOperator == o.Name)
                 {
                     return o.Value;
                 }
             }
 
-            return id_operator;
+            return idOperator;
         }
 
-        private enum Input_Type
+        private enum InputType
         {
             String,
             Decimal
         }
 
-        private bool checkOperator(string value, Input_Type input_Type)
+        private bool checkOperator(string value, InputType inputType)
         {
             var operators = new List<Operator>();
 
-            switch (input_Type)
+            switch (inputType)
             {
-                case Input_Type.String:
+                case InputType.String:
                     operators.Add(new Operator_equal());
                     operators.Add(new Operator_like());
                     operators.Add(new Operator_in());
                     break;
-                case Input_Type.Decimal:
+                case InputType.Decimal:
                     operators.Add(new Operator_equal());
                     operators.Add(new Operator_moreThan());
                     operators.Add(new Operator_moreThanOrEqual());
@@ -333,7 +332,7 @@ namespace APIDemo.Controllers
         public IHttpActionResult PostStudentProfile(int num, string type)
         {
             string result = "";
-            DateTime time_start = DateTime.Now;
+            DateTime timeStart = DateTime.Now;
 
             if (!ModelState.IsValid)
             {
@@ -342,25 +341,25 @@ namespace APIDemo.Controllers
 
             var studentProfileList = new List<StudentProfile>();
 
-            var randomID = new RandomID();
-            List<string> randomIDs = randomID.getRandomIDs(num);
+            var randomId = new RandomID();
+            List<string> randomIDs = randomId.getRandomIDs(num);
 
-            DateTime time_id_done = DateTime.Now;
-            result += "generate ID costs " + Util.getSecond(time_start, time_id_done) + " sec, ";
+            DateTime timeIdDone = DateTime.Now;
+            result += "generate ID costs " + Util.getSecond(timeStart, timeIdDone) + " sec, ";
 
             var randomName = new RandomName(new Random());
-            List<string> randomNames = randomName.RandomNames(num, 2, null, null);
+            List<string> randomNames = randomName.RandomNames(num, 2);
 
-            DateTime time_name_done = DateTime.Now;
-            result += "generate Name costs " + Util.getSecond(time_id_done, time_name_done) + " sec, ";
+            DateTime timeNameDone = DateTime.Now;
+            result += "generate Name costs " + Util.getSecond(timeIdDone, timeNameDone) + " sec, ";
 
             List<string> randomGenders = Util.getRandomList(Const.Gender, num);
             List<string> randomBloods = Util.getRandomList(Const.Blood, num);
             List<decimal> randomHeights = Util.getRandomDecimalList(150, 200, 1, num);
             List<decimal> randomWeights = Util.getRandomDecimalList(40, 100, 1, num);
 
-            DateTime time_other_done = DateTime.Now;
-            result += "generate other columns costs " + Util.getSecond(time_name_done, time_other_done) + " sec, ";
+            DateTime timeOtherDone = DateTime.Now;
+            result += "generate other columns costs " + Util.getSecond(timeNameDone, timeOtherDone) + " sec, ";
 
             for (int i = 0; i < num; i++)
             {
@@ -390,23 +389,23 @@ namespace APIDemo.Controllers
             randomWeights.TrimExcess();
             GC.Collect();
 
-            DateTime time_list_done = DateTime.Now;
-            result += "put into List costs " + Util.getSecond(time_other_done, time_list_done) + " sec, ";
+            DateTime timeListDone = DateTime.Now;
+            result += "put into List costs " + Util.getSecond(timeOtherDone, timeListDone) + " sec, ";
 
-            bool db_result = false;
+            bool dbResult;
             switch (type)
             {
                 case "ADO_For":
-                    db_result = MassInsert_ADO_For(studentProfileList);
+                    dbResult = MassInsert_ADO_For(studentProfileList);
                     break;
                 case "EF_AddRange":
-                    db_result = MassInsert_EF_AddRange(studentProfileList);
+                    dbResult = MassInsert_EF_AddRange(studentProfileList);
                     break;
                 case "SqlBulkCopy":
-                    db_result = MassInsert_SqlBulkCopy(studentProfileList);
+                    dbResult = MassInsert_SqlBulkCopy(studentProfileList);
                     break;
                 case "TVP":
-                    db_result = MassInsert_TVP(studentProfileList);
+                    dbResult = MassInsert_TVP(studentProfileList);
                     break;
                 default:
                     return BadRequest("invalid type: " + type);
@@ -416,17 +415,17 @@ namespace APIDemo.Controllers
             studentProfileList.TrimExcess();
             GC.Collect();
 
-            if (!db_result)
+            if (!dbResult)
             {
                 result += "save DB has error, see detail in EventLog";
                 return Ok(new { result });
             }
 
-            DateTime time_db_done = DateTime.Now;
-            result += "save to DB costs " + Util.getSecond(time_list_done, time_db_done) + " sec, ";
+            DateTime timeDbDone = DateTime.Now;
+            result += "save to DB costs " + Util.getSecond(timeListDone, timeDbDone) + " sec, ";
 
-            DateTime time_end = DateTime.Now;
-            result += "total costs " + Util.getSecond(time_start, time_end) + " sec.";
+            DateTime timeEnd = DateTime.Now;
+            result += "total costs " + Util.getSecond(timeStart, timeEnd) + " sec.";
 
             return Ok(new { result });
         }
@@ -492,7 +491,7 @@ namespace APIDemo.Controllers
                 var splitList = Util.splitList(studentProfileList, DbUtil.maxRowSize);
                 foreach (var list in splitList)
                 {
-                    if (setDataTable(list, ref columnNames, ref dt))
+                    if (SetDataTable(list, ref columnNames, ref dt))
                     {
                         result = DbUtil.MySqlBulkCopy("StudentProfile", columnNames, dt, connStr);
                     }
@@ -506,14 +505,14 @@ namespace APIDemo.Controllers
             return result;
         }
 
-        private bool setDataTable(List<StudentProfile> studentProfileList, ref string[] columnNames, ref DataTable dt)
+        private bool SetDataTable(List<StudentProfile> studentProfileList, ref string[] columnNames, ref DataTable dt)
         {
             bool result = false;
 
             try
             {
                 //欄位名稱與型態
-                columnNames = new string[] { "guid", "Id", "Name", "Gender", "Blood", "Height", "Weight", "Coupon", "CreateDate", "UpdateDate" };
+                columnNames = new[] { "guid", "Id", "Name", "Gender", "Blood", "Height", "Weight", "Coupon", "CreateDate", "UpdateDate" };
                 Type[] columnTypes = new Type[] { typeof(Guid), typeof(string), typeof(string), typeof(string), typeof(string), typeof(decimal), typeof(decimal), typeof(string), typeof(DateTime), typeof(DateTime) };
 
                 dt = DbUtil.setDataColumn(columnNames, columnTypes);
@@ -556,7 +555,7 @@ namespace APIDemo.Controllers
                 var splitList = Util.splitList(studentProfileList, DbUtil.maxRowSize);
                 foreach (var list in splitList)
                 {
-                    if (setDataTable(list, ref columnNames, ref dt))
+                    if (SetDataTable(list, ref columnNames, ref dt))
                     {
                         string typeName = "TVP_StudentProfile";
                         string sql = "insert into StudentProfile select * FROM @" + typeName;
@@ -625,7 +624,7 @@ namespace APIDemo.Controllers
         public IHttpActionResult PutStudentProfile(int num, string type)
         {
             string result = "";
-            DateTime time_start = DateTime.Now;
+            DateTime timeStart = DateTime.Now;
 
             if (!ModelState.IsValid)
             {
@@ -636,8 +635,8 @@ namespace APIDemo.Controllers
 
             var ds = db.StudentProfile.Where(s => s.Coupon == null).OrderBy(s => s.CreateDate).Take(num).Select(s => new { s.guid, s.Id, s.Name }).ToList();
 
-            DateTime time_guid_done = DateTime.Now;
-            result += "get DB target costs " + Util.getSecond(time_start, time_guid_done) + " sec, ";
+            DateTime timeGuidDone = DateTime.Now;
+            result += "get DB target costs " + Util.getSecond(timeStart, timeGuidDone) + " sec, ";
 
             foreach (var column in ds)
             {
@@ -648,23 +647,23 @@ namespace APIDemo.Controllers
                 studentProfileList.Add(item);
             }
 
-            DateTime time_coupon_done = DateTime.Now;
-            result += "generate Coupon and put into List costs " + Util.getSecond(time_guid_done, time_coupon_done) + " sec, ";
+            DateTime timeCouponDone = DateTime.Now;
+            result += "generate Coupon and put into List costs " + Util.getSecond(timeGuidDone, timeCouponDone) + " sec, ";
 
-            bool db_result = false;
+            bool dbResult;
             switch (type)
             {
                 case "ADO_For":
-                    db_result = MassUpdate_ADO_For(studentProfileList);
+                    dbResult = MassUpdate_ADO_For(studentProfileList);
                     break;
                 case "EF_For":
-                    db_result = MassUpdate_EF_For(studentProfileList);
+                    dbResult = MassUpdate_EF_For(studentProfileList);
                     break;
                 case "Z_EF_Ext":
-                    db_result = MassUpdate_Z_EF_Ext(studentProfileList);
+                    dbResult = MassUpdate_Z_EF_Ext(studentProfileList);
                     break;
                 case "TVP":
-                    db_result = MassUpdate_TVP(studentProfileList);
+                    dbResult = MassUpdate_TVP(studentProfileList);
                     break;
                 default:
                     return BadRequest("invalid type: " + type);
@@ -676,17 +675,17 @@ namespace APIDemo.Controllers
             studentProfileList.TrimExcess();
             GC.Collect();
 
-            if (!db_result)
+            if (!dbResult)
             {
                 result += "save DB has error, see detail in EventLog";
                 return Ok(new { result });
             }
 
-            DateTime time_db_done = DateTime.Now;
-            result += "save to DB costs " + Util.getSecond(time_coupon_done, time_db_done) + " sec, ";
+            DateTime timeDbDone = DateTime.Now;
+            result += "save to DB costs " + Util.getSecond(timeCouponDone, timeDbDone) + " sec, ";
 
-            DateTime time_end = DateTime.Now;
-            result += "total costs " + Util.getSecond(time_start, time_end) + " sec.";
+            DateTime timeEnd = DateTime.Now;
+            result += "total costs " + Util.getSecond(timeStart, timeEnd) + " sec.";
 
             return Ok(new { result });
         }
@@ -732,8 +731,11 @@ namespace APIDemo.Controllers
                 foreach (var studentProfile in studentProfileList)
                 {
                     var record = db.StudentProfile.Find(studentProfile.guid);
-                    record.Coupon = studentProfile.Coupon;
-                    record.UpdateDate = studentProfile.UpdateDate;
+                    if (record != null)
+                    {
+                        record.Coupon = studentProfile.Coupon;
+                        record.UpdateDate = studentProfile.UpdateDate;
+                    }
                 }
 
                 db.SaveChanges();
@@ -775,7 +777,7 @@ namespace APIDemo.Controllers
                 var splitList = Util.splitList(studentProfileList, DbUtil.maxRowSize);
                 foreach (var list in splitList)
                 {
-                    if (setDataTable(list, ref columnNames, ref dt))
+                    if (SetDataTable(list, ref columnNames, ref dt))
                     {
                         string typeName = "TVP_StudentProfile";
                         string sql = @"update StudentProfile 
@@ -799,10 +801,6 @@ namespace APIDemo.Controllers
         public IHttpActionResult DeleteStudentProfile(string guid)
         {
             var studentProfile = db.StudentProfile.Where(x => x.guid.ToString() == guid);
-            if (studentProfile == null)
-            {
-                return NotFound();
-            }
 
             db.StudentProfile.RemoveRange(studentProfile);
             db.SaveChanges();
