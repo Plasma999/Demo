@@ -44,12 +44,12 @@ namespace APIDemo.Controllers
             return Ok(ds);
         }
 
-        // GET api/StudentProfiles?Coupon={Coupon}
+        // GET api/StudentProfiles?coupon={coupon}
         [ResponseType(typeof(StudentProfile))]
-        public IHttpActionResult GetStudentProfile(string Coupon)
+        public IHttpActionResult GetStudentProfile(string coupon)
         {
-            Coupon = Coupon.ReplaceNull();
-            int count = db.StudentProfile.Count(s => s.Coupon == Coupon);
+            coupon = coupon.ReplaceNull();
+            int count = db.StudentProfile.Count(s => s.Coupon == coupon);
             return Ok(count);
         }
 
@@ -61,9 +61,9 @@ namespace APIDemo.Controllers
             return Ok(ds);
         }
 
-        // GET: api/StudentProfiles/{Id}?Name={Name}&Gender={Gender}&Blood={Blood}&Height={Height}&Weight={Weight}&Coupon={Coupon}
+        // GET: api/StudentProfiles/{id}?name={name}&gender={gender}&blood={blood}&height={height}&weight={weight}&coupon={coupon}
         [ResponseType(typeof(StudentProfile))]
-        public IHttpActionResult GetStudentProfile(string Id, string Name, string Gender, string Blood, string Height, string Weight, string Coupon)
+        public IHttpActionResult GetStudentProfile(string id, string name, string gender, string blood, string height, string weight, string coupon)
         {
             var obj = new ServerSideProcessingModel();
             if (!string.IsNullOrEmpty(HttpContext.Current.Request.QueryString["start"]))
@@ -96,31 +96,31 @@ namespace APIDemo.Controllers
             string bloodOperator = "";
             string bloodValue = "";
 
-            if (!ParseSyntax(Id, InputType.String, ref idOperator, ref idValue, ref errMsg))
+            if (!ParseSyntax(id, InputType.String, ref idOperator, ref idValue, ref errMsg))
             {
                 return BadRequest(errMsg);
             }
-            if (!ParseSyntax(Name, InputType.String, ref nameOperator, ref nameValue, ref errMsg))
+            if (!ParseSyntax(name, InputType.String, ref nameOperator, ref nameValue, ref errMsg))
             {
                 return BadRequest(errMsg);
             }
-            if (!ParseSyntax(Coupon, InputType.String, ref couponOperator, ref couponValue, ref errMsg))
+            if (!ParseSyntax(coupon, InputType.String, ref couponOperator, ref couponValue, ref errMsg))
             {
                 return BadRequest(errMsg);
             }
-            if (!ParseSyntax(Height, InputType.Decimal, ref heightOperator, ref heightValue, ref heightValue2, ref errMsg))
+            if (!ParseSyntax(height, InputType.Decimal, ref heightOperator, ref heightValue, ref heightValue2, ref errMsg))
             {
                 return BadRequest(errMsg);
             }
-            if (!ParseSyntax(Weight, InputType.Decimal, ref weightOperator, ref weightValue, ref weightValue2, ref errMsg))
+            if (!ParseSyntax(weight, InputType.Decimal, ref weightOperator, ref weightValue, ref weightValue2, ref errMsg))
             {
                 return BadRequest(errMsg);
             }
-            if (!ParseSyntax(Gender, InputType.String, ref genderOperator, ref genderValue, ref errMsg))
+            if (!ParseSyntax(gender, InputType.String, ref genderOperator, ref genderValue, ref errMsg))
             {
                 return BadRequest(errMsg);
             }
-            if (!ParseSyntax(Blood, InputType.String, ref bloodOperator, ref bloodValue, ref errMsg))
+            if (!ParseSyntax(blood, InputType.String, ref bloodOperator, ref bloodValue, ref errMsg))
             {
                 return BadRequest(errMsg);
             }

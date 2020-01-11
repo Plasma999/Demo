@@ -70,19 +70,19 @@
         if (id_syntax == '' && name_syntax == '' && gender_syntax == '' && blood_syntax == '' && height_syntax == '' && weight_syntax == '' && coupon_syntax == '' && $('#select_dataTable_processing').val() == 'Client') {
 
         }
-        else {  //組API url: api/StudentProfiles/{Id}?Name={Name}&Gender={Gender}&Blood={Blood}&Height={Height}&Weight={Weight}&Coupon={Coupon}
+        else {  //組API url: api/StudentProfiles/{id}?name={name}&gender={gender}&blood={blood}&height={height}&weight={weight}&coupon={coupon}
             api += id_syntax == '' ? noNeed : id_syntax;
-            api += "?Name=";
+            api += "?name=";
             api += name_syntax == '' ? noNeed : name_syntax;
-            api += "&Gender=";
+            api += "&gender=";
             api += gender_syntax == '' ? noNeed : gender_syntax;
-            api += "&Blood=";
+            api += "&blood=";
             api += blood_syntax == '' ? noNeed : blood_syntax;
-            api += "&Height=";
+            api += "&height=";
             api += height_syntax == '' ? noNeed : height_syntax;
-            api += "&Weight=";
+            api += "&weight=";
             api += weight_syntax == '' ? noNeed : weight_syntax;
-            api += "&Coupon=";
+            api += "&coupon=";
             api += coupon_syntax == '' ? noNeed : coupon_syntax;
         }
 

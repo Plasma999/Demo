@@ -11,7 +11,7 @@ namespace APIDemo.Controllers
             return View();
         }
 
-        public ActionResult TestAPI()
+        public ActionResult TestApi()
         {
             ViewBag.Title = "Test API";
 
