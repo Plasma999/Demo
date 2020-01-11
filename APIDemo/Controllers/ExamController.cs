@@ -8,7 +8,7 @@ namespace APIDemo.Controllers
         // GET api/Exam?examNo={examNo}
         public IHttpActionResult GetExam(string examNo)
         {
-            string result = "";
+            string result;
             var exam = new Exam();
 
             switch (examNo)

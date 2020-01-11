@@ -17,14 +17,14 @@ namespace APIDemo.Controllers
 {
     public class StudentProfilesController : ApiController
     {
-        private StudentDB db = new StudentDB();
-        private string connStr = Util.getconnectionString(Const.connID);
-        private ILogger myLogger = new EventLogger();
+        private readonly StudentDB _db = new StudentDB();
+        private readonly string _connStr = Util.getconnectionString(Const.connID);
+        private readonly ILogger _myLogger = new EventLogger();
 
         // GET: api/StudentProfiles  查詢全部
         public IHttpActionResult GetStudentProfile()
         {
-            var data = (IQueryable<StudentProfile>)db.StudentProfile;
+            var data = (IQueryable<StudentProfile>)_db.StudentProfile;
             int recordSize = data.Count();
             data = data.Take(DbUtil.searchSize);
             string msg = DbUtil.getDbCountMsg(recordSize);
@@ -35,7 +35,7 @@ namespace APIDemo.Controllers
         [ResponseType(typeof(StudentProfile))]
         public IHttpActionResult GetStudentProfile(Guid guid)
         {
-            var ds = db.StudentProfile.Find(guid);
+            var ds = _db.StudentProfile.Find(guid);
             if (ds == null)
             {
                 return NotFound();
@@ -49,7 +49,7 @@ namespace APIDemo.Controllers
         public IHttpActionResult GetStudentProfile(string coupon)
         {
             coupon = coupon.ReplaceNull();
-            int count = db.StudentProfile.Count(s => s.Coupon == coupon);
+            int count = _db.StudentProfile.Count(s => s.Coupon == coupon);
             return Ok(count);
         }
 
@@ -57,7 +57,7 @@ namespace APIDemo.Controllers
         [ResponseType(typeof(StudentProfile))]
         public IHttpActionResult GetStudentProfileSummary(string columnName)
         {
-            var ds = db.StudentProfile_summary(columnName).ToList().AsQueryable();
+            var ds = _db.StudentProfile_summary(columnName).ToList().AsQueryable();
             return Ok(ds);
         }
 
@@ -136,7 +136,7 @@ namespace APIDemo.Controllers
                 weightValue2.ToString(CultureInfo.InvariantCulture), genderValue, bloodValue, obj.Start.ToString(),
                 obj.Length.ToString(), obj.OrderBy, obj.OrderByAsc
             };
-            DataSet dataSet = DbUtil.ExecuteSql(sql, paramValue, connStr);
+            DataSet dataSet = DbUtil.ExecuteSql(sql, paramValue, _connStr);
 
             if (dataSet == null || dataSet.Tables.Count < 2)
             {
@@ -217,15 +217,17 @@ namespace APIDemo.Controllers
 
         private string convertOperator(string idOperator)
         {
-            var operators = new List<Operator>();
-            operators.Add(new Operator_equal());
-            operators.Add(new Operator_like());
-            operators.Add(new Operator_in());
-            operators.Add(new Operator_moreThan());
-            operators.Add(new Operator_moreThanOrEqual());
-            operators.Add(new Operator_lessThan());
-            operators.Add(new Operator_lessThanOrEqual());
-            operators.Add(new Operator_between());
+            var operators = new List<Operator>
+            {
+                new Operator_equal(),
+                new Operator_like(),
+                new Operator_in(),
+                new Operator_moreThan(),
+                new Operator_moreThanOrEqual(),
+                new Operator_lessThan(),
+                new Operator_lessThanOrEqual(),
+                new Operator_between()
+            };
 
             foreach (var o in operators)
             {
@@ -306,11 +308,11 @@ namespace APIDemo.Controllers
             }
 
             studentProfile.CreateDate = DateTime.Now;
-            db.StudentProfile.Add(studentProfile);
+            _db.StudentProfile.Add(studentProfile);
 
             try
             {
-                db.SaveChanges();
+                _db.SaveChanges();
             }
             catch (DbUpdateException)
             {
@@ -363,15 +365,17 @@ namespace APIDemo.Controllers
 
             for (int i = 0; i < num; i++)
             {
-                var item = new StudentProfile();
-                item.guid = Guid.NewGuid();
-                item.Id = randomIDs[i];
-                item.Name = randomNames[i];
-                item.Gender = randomGenders[i];
-                item.Blood = randomBloods[i];
-                item.Height = randomHeights[i];
-                item.Weight = randomWeights[i];
-                item.CreateDate = DateTime.Now;
+                var item = new StudentProfile
+                {
+                    guid = Guid.NewGuid(),
+                    Id = randomIDs[i],
+                    Name = randomNames[i],
+                    Gender = randomGenders[i],
+                    Blood = randomBloods[i],
+                    Height = randomHeights[i],
+                    Weight = randomWeights[i],
+                    CreateDate = DateTime.Now
+                };
                 studentProfileList.Add(item);
             }
 
@@ -437,7 +441,7 @@ namespace APIDemo.Controllers
 
             try
             {
-                sc = new SqlConnection(connStr);
+                sc = new SqlConnection(_connStr);
                 string sql = @"insert into StudentProfile (guid, Id, Name, Gender, Blood, Height, Weight)
                     values ({0}, {1}, {2}, {3}, {4}, {5}, {6})";
 
@@ -452,7 +456,7 @@ namespace APIDemo.Controllers
             }
             catch (Exception e)
             {
-                myLogger.Log(Util.getDebugMsg(MethodBase.GetCurrentMethod(), e.ToString()));
+                _myLogger.Log(Util.getDebugMsg(MethodBase.GetCurrentMethod(), e.ToString()));
             }
             finally
             {
@@ -468,13 +472,13 @@ namespace APIDemo.Controllers
 
             try
             {
-                db.StudentProfile.AddRange(studentProfileList);
-                db.SaveChanges();
+                _db.StudentProfile.AddRange(studentProfileList);
+                _db.SaveChanges();
                 result = true;
             }
             catch (Exception e)
             {
-                myLogger.Log(Util.getDebugMsg(MethodBase.GetCurrentMethod(), e.ToString()));
+                _myLogger.Log(Util.getDebugMsg(MethodBase.GetCurrentMethod(), e.ToString()));
             }
 
             return result;
@@ -493,13 +497,13 @@ namespace APIDemo.Controllers
                 {
                     if (SetDataTable(list, ref columnNames, ref dt))
                     {
-                        result = DbUtil.MySqlBulkCopy("StudentProfile", columnNames, dt, connStr);
+                        result = DbUtil.MySqlBulkCopy("StudentProfile", columnNames, dt, _connStr);
                     }
                 }
             }
             catch (Exception e)
             {
-                myLogger.Log(Util.getDebugMsg(MethodBase.GetCurrentMethod(), e.ToString()));
+                _myLogger.Log(Util.getDebugMsg(MethodBase.GetCurrentMethod(), e.ToString()));
             }
 
             return result;
@@ -518,19 +522,19 @@ namespace APIDemo.Controllers
                 dt = DbUtil.setDataColumn(columnNames, columnTypes);
 
                 //DataTable的資料列
-                for (int i = 0; i < studentProfileList.Count; i++)
+                foreach (var item in studentProfileList)
                 {
                     DataRow dr = dt.NewRow();
-                    dr["guid"] = studentProfileList[i].guid;
-                    dr["Id"] = studentProfileList[i].Id;
-                    dr["Name"] = studentProfileList[i].Name;
-                    dr["Gender"] = studentProfileList[i].Gender;
-                    dr["Blood"] = studentProfileList[i].Blood;
-                    dr["Height"] = studentProfileList[i].Height == null ? (object)DBNull.Value : studentProfileList[i].Height;
-                    dr["Weight"] = studentProfileList[i].Weight == null ? (object)DBNull.Value : studentProfileList[i].Weight;
-                    dr["Coupon"] = studentProfileList[i].Coupon;
-                    dr["CreateDate"] = studentProfileList[i].CreateDate == null ? (object)DBNull.Value : studentProfileList[i].CreateDate;
-                    dr["UpdateDate"] = studentProfileList[i].UpdateDate == null ? (object)DBNull.Value : studentProfileList[i].UpdateDate;
+                    dr["guid"] = item.guid;
+                    dr["Id"] = item.Id;
+                    dr["Name"] = item.Name;
+                    dr["Gender"] = item.Gender;
+                    dr["Blood"] = item.Blood;
+                    dr["Height"] = item.Height ?? (object)DBNull.Value;
+                    dr["Weight"] = item.Weight ?? (object)DBNull.Value;
+                    dr["Coupon"] = item.Coupon;
+                    dr["CreateDate"] = item.CreateDate ?? (object)DBNull.Value;
+                    dr["UpdateDate"] = item.UpdateDate ?? (object)DBNull.Value;
                     dt.Rows.Add(dr);
                 }
 
@@ -538,7 +542,7 @@ namespace APIDemo.Controllers
             }
             catch (Exception e)
             {
-                myLogger.Log(Util.getDebugMsg(MethodBase.GetCurrentMethod(), e.ToString()));
+                _myLogger.Log(Util.getDebugMsg(MethodBase.GetCurrentMethod(), e.ToString()));
             }
 
             return result;
@@ -559,13 +563,13 @@ namespace APIDemo.Controllers
                     {
                         string typeName = "TVP_StudentProfile";
                         string sql = "insert into StudentProfile select * FROM @" + typeName;
-                        result = DbUtil.TVP_process(sql, typeName, dt, connStr);
+                        result = DbUtil.TVP_process(sql, typeName, dt, _connStr);
                     }
                 }
             }
             catch (Exception e)
             {
-                myLogger.Log(Util.getDebugMsg(MethodBase.GetCurrentMethod(), e.ToString()));
+                _myLogger.Log(Util.getDebugMsg(MethodBase.GetCurrentMethod(), e.ToString()));
             }
 
             return result;
@@ -584,7 +588,7 @@ namespace APIDemo.Controllers
 
             try
             {
-                var record = db.StudentProfile.First(s => s.guid == studentProfile.guid);
+                var record = _db.StudentProfile.First(s => s.guid == studentProfile.guid);
                 record.Id = studentProfile.Id;
                 record.Name = studentProfile.Name;
                 record.Gender = studentProfile.Gender;
@@ -593,7 +597,7 @@ namespace APIDemo.Controllers
                 record.Weight = studentProfile.Weight;
                 record.Coupon = studentProfile.Coupon;
                 record.UpdateDate = DateTime.Now;
-                db.SaveChanges();
+                _db.SaveChanges();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -633,17 +637,19 @@ namespace APIDemo.Controllers
 
             var studentProfileList = new List<StudentProfile>();
 
-            var ds = db.StudentProfile.Where(s => s.Coupon == null).OrderBy(s => s.CreateDate).Take(num).Select(s => new { s.guid, s.Id, s.Name }).ToList();
+            var ds = _db.StudentProfile.Where(s => s.Coupon == null).OrderBy(s => s.CreateDate).Take(num).Select(s => new { s.guid, s.Id, s.Name }).ToList();
 
             DateTime timeGuidDone = DateTime.Now;
             result += "get DB target costs " + Util.getSecond(timeStart, timeGuidDone) + " sec, ";
 
             foreach (var column in ds)
             {
-                var item = new StudentProfile();
-                item.guid = column.guid;
-                item.Coupon = Util.truncateString(Util.getMD5(column.Id + column.Name), 15);
-                item.UpdateDate = DateTime.Now;
+                var item = new StudentProfile
+                {
+                    guid = column.guid,
+                    Coupon = Util.truncateString(Util.getMD5(column.Id + column.Name), 15),
+                    UpdateDate = DateTime.Now
+                };
                 studentProfileList.Add(item);
             }
 
@@ -697,7 +703,7 @@ namespace APIDemo.Controllers
 
             try
             {
-                sc = new SqlConnection(connStr);
+                sc = new SqlConnection(_connStr);
                 string sql = @"update StudentProfile 
                     set Coupon = {0}, UpdateDate = getdate()
                     where guid = {1}";
@@ -712,7 +718,7 @@ namespace APIDemo.Controllers
             }
             catch (Exception e)
             {
-                myLogger.Log(Util.getDebugMsg(MethodBase.GetCurrentMethod(), e.ToString()));
+                _myLogger.Log(Util.getDebugMsg(MethodBase.GetCurrentMethod(), e.ToString()));
             }
             finally
             {
@@ -730,7 +736,7 @@ namespace APIDemo.Controllers
             {
                 foreach (var studentProfile in studentProfileList)
                 {
-                    var record = db.StudentProfile.Find(studentProfile.guid);
+                    var record = _db.StudentProfile.Find(studentProfile.guid);
                     if (record != null)
                     {
                         record.Coupon = studentProfile.Coupon;
@@ -738,12 +744,12 @@ namespace APIDemo.Controllers
                     }
                 }
 
-                db.SaveChanges();
+                _db.SaveChanges();
                 result = true;
             }
             catch (Exception e)
             {
-                myLogger.Log(Util.getDebugMsg(MethodBase.GetCurrentMethod(), e.ToString()));
+                _myLogger.Log(Util.getDebugMsg(MethodBase.GetCurrentMethod(), e.ToString()));
             }
 
             return result;
@@ -755,12 +761,12 @@ namespace APIDemo.Controllers
 
             try
             {
-                db.BulkUpdate(studentProfileList, options => options.ColumnInputExpression = c => new { c.guid, c.Coupon, c.UpdateDate });
+                _db.BulkUpdate(studentProfileList, options => options.ColumnInputExpression = c => new { c.guid, c.Coupon, c.UpdateDate });
                 result = true;
             }
             catch (Exception e)
             {
-                myLogger.Log(Util.getDebugMsg(MethodBase.GetCurrentMethod(), e.ToString()));
+                _myLogger.Log(Util.getDebugMsg(MethodBase.GetCurrentMethod(), e.ToString()));
             }
 
             return result;
@@ -784,13 +790,13 @@ namespace APIDemo.Controllers
                         set Coupon = t.Coupon, UpdateDate = getdate()
                         from StudentProfile s
                         join @" + typeName + " t on s.guid = t.guid";
-                        result = DbUtil.TVP_process(sql, typeName, dt, connStr);
+                        result = DbUtil.TVP_process(sql, typeName, dt, _connStr);
                     }
                 }
             }
             catch (Exception e)
             {
-                myLogger.Log(Util.getDebugMsg(MethodBase.GetCurrentMethod(), e.ToString()));
+                _myLogger.Log(Util.getDebugMsg(MethodBase.GetCurrentMethod(), e.ToString()));
             }
 
             return result;
@@ -800,10 +806,10 @@ namespace APIDemo.Controllers
         [ResponseType(typeof(StudentProfile))]
         public IHttpActionResult DeleteStudentProfile(string guid)
         {
-            var studentProfile = db.StudentProfile.Where(x => x.guid.ToString() == guid);
+            var studentProfile = _db.StudentProfile.Where(x => x.guid.ToString() == guid);
 
-            db.StudentProfile.RemoveRange(studentProfile);
-            db.SaveChanges();
+            _db.StudentProfile.RemoveRange(studentProfile);
+            _db.SaveChanges();
 
             return Ok(studentProfile);
         }
@@ -817,12 +823,12 @@ namespace APIDemo.Controllers
                 try
                 {
                     string sql = @"truncate table StudentProfile";
-                    DbUtil.ExecuteSqlNoReturn(sql, new string[] { }, connStr);
+                    DbUtil.ExecuteSqlNoReturn(sql, new string[] { }, _connStr);
                     return Ok("delete ok");
                 }
                 catch (Exception e)
                 {
-                    myLogger.Log(Util.getDebugMsg(MethodBase.GetCurrentMethod(), e.ToString()));
+                    _myLogger.Log(Util.getDebugMsg(MethodBase.GetCurrentMethod(), e.ToString()));
                     return BadRequest("delete DB has error, see detail in EventLog");
                 }
             }
@@ -836,14 +842,14 @@ namespace APIDemo.Controllers
         {
             if (disposing)
             {
-                db.Dispose();
+                _db.Dispose();
             }
             base.Dispose(disposing);
         }
 
         private bool StudentProfileExists(Guid id)
         {
-            return db.StudentProfile.Count(e => e.guid == id) > 0;
+            return _db.StudentProfile.Count(e => e.guid == id) > 0;
         }
     }
 }
